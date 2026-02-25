@@ -34,6 +34,16 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.assessment),
+            label: 'Kế hoạch',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Thêm'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Của tôi'),
+        ],
+      ),
     );
   }
 }
