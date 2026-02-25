@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
@@ -25,7 +26,51 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Text(
-                    '2026',
+                    'Tất cả',
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    'Học tập',
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    'Công việc',
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    'Tài chính',
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    'Sức khỏe',
                     style: TextStyle(color: Colors.black, fontSize: 12),
                   ),
                 ),
