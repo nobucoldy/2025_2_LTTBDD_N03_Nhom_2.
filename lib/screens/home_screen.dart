@@ -16,6 +16,21 @@ class HomeScreen extends StatelessWidget {
                 IconButton(icon: const Icon(Icons.search), onPressed: () {}),
               ],
             ),
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    '2026',
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
