@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 
-void main(List<String> args) {
-  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()));
+void main() {
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -12,6 +12,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'Quản lý kế hoạch',
+
+      theme: ThemeData(primarySwatch: Colors.purple, useMaterial3: true),
       home: const HomeScreen(),
     );
   }
