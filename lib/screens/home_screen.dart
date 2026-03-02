@@ -118,9 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
               trailing: Icon(
                 _isSettingsExpanded ? Icons.expand_less : Icons.expand_more,
               ),
-              onTap: () {
-                setState(() => _isSettingsExpanded = !_isSettingsExpanded);
-              },
+              onTap: () =>
+                  setState(() => _isSettingsExpanded = !_isSettingsExpanded),
             ),
             if (_isSettingsExpanded)
               Padding(
@@ -153,7 +152,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.search),
-                  onPressed: () => setState(() => _currentContent = 'home'),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Tính năng tìm kiếm đang phát triển!"),
+                        duration: Duration(milliseconds: 800),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -186,7 +194,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (index) => setState(() => _selectedIndex = index),
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+            if (index == 0) {
+              _currentContent = 'home';
+            }
+          });
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.assessment),
