@@ -5,7 +5,6 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Thay Scaffold bằng SingleChildScrollView để lồng vào Home mượt hơn
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
