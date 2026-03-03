@@ -24,7 +24,6 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // TextField nhập kế hoạch
                 TextField(
                   decoration: const InputDecoration(
                     hintText: 'Nhập kế hoạch mới tại đây',
@@ -37,14 +36,15 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                // Row các nút chọn category và ngày
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     _quickAction(
                       icon: Icons.label_outline,
                       text: _category,
                       onTap: () => _showCategoryPicker(context),
                     ),
+                    const SizedBox(width: 6),
                     _quickAction(
                       icon: Icons.calendar_today_outlined,
                       text: _startDate == null
@@ -52,6 +52,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                           : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
                       onTap: () => _pickDate(context, true),
                     ),
+                    const SizedBox(width: 6),
                     _quickAction(
                       icon: Icons.calendar_today_outlined,
                       text: _endDate == null
@@ -69,7 +70,6 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     );
   }
 
-  // Hàm chọn ngày
   Future<void> _pickDate(BuildContext context, bool isStart) async {
     final pickedDate = await showDatePicker(
       context: context,
@@ -89,7 +89,6 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     }
   }
 
-  // Hàm chọn category
   void _showCategoryPicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -113,34 +112,30 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   }
 }
 
-// Widget helper cho các nút nhỏ gọn
 Widget _quickAction({
   required IconData icon,
   required String text,
   required VoidCallback onTap,
 }) {
-  return Padding(
-    padding: const EdgeInsets.only(right: 8),
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 18, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(
-              text,
-              style: const TextStyle(fontSize: 13, color: Colors.grey),
-            ),
-          ],
-        ),
+  return InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(16),
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: Colors.grey.shade600),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+          ),
+        ],
       ),
     ),
   );
