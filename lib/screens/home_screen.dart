@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'about_screen.dart';
 import '../widgets/plan_card.dart';
 import '../widgets/filter_chip.dart';
+import '../widgets/app_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -30,12 +31,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          child: Center(child: Text("Nội dung sẽ hiển thị ở đây")),
-        ),
         planCard('Kế hoạch 1'),
         planCard('Kế hoạch 2'),
+        planCard('Kế hoạch 3'),
+        planCard('Kế hoạch 4'),
+        planCard('Kế hoạch 5'),
+        planCard('Kế hoạch 6'),
+        planCard('Kế hoạch 7'),
+        planCard('Kế hoạch 8'),
+        planCard('Kế hoạch 9'),
+        planCard('Kế hoạch 10'),
       ],
     );
   }
@@ -44,61 +49,19 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
-              height: 120,
-              width: double.infinity,
-              decoration: const BoxDecoration(color: Colors.purple),
-              padding: const EdgeInsets.only(left: 16, bottom: 16),
-              alignment: Alignment.bottomLeft,
-              child: const Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.info_outline),
-              title: const Text('About'),
-              onTap: () {
-                setState(() => _currentContent = 'about');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Cài đặt'),
-              trailing: Icon(
-                _isSettingsExpanded ? Icons.expand_less : Icons.expand_more,
-              ),
-              onTap: () =>
-                  setState(() => _isSettingsExpanded = !_isSettingsExpanded),
-            ),
-            if (_isSettingsExpanded)
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: ListTile(
-                  leading: const Icon(Icons.palette_outlined, size: 20),
-                  title: const Text(
-                    'Chế độ tối',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  trailing: Switch(
-                    value: widget.isDarkMode,
-                    activeThumbColor: Colors.blue,
-                    onChanged: (val) => widget.onThemeChanged(val),
-                  ),
-                ),
-              ),
-          ],
-        ),
+      drawer: AppDrawer(
+        isDarkMode: widget.isDarkMode,
+        onThemeChanged: widget.onThemeChanged,
+        isSettingsExpanded: _isSettingsExpanded,
+        onNavigate: (value) {
+          setState(() {
+            if (value == 'about') _currentContent = 'about';
+            if (value == 'settings') _isSettingsExpanded = !_isSettingsExpanded;
+          });
+          Navigator.pop(context);
+        },
       ),
+
       body: SafeArea(
         child: Column(
           children: [
