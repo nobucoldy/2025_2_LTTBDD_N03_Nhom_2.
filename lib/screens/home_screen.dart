@@ -4,7 +4,7 @@ import '../widgets/plan_card.dart';
 import '../widgets/filter_chip.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/add_plan_bottom_sheet.dart';
-import '../models/plan_model.dart';
+import '../data/plan_data.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -26,14 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Widget _buildMainContent() {
-    return Column(
-      children: [
-        planCard(PlanModel(title: 'Học Flutter', category: 'Học tập')),
-        planCard(PlanModel(title: 'Dự án cá nhân', category: 'Công việc')),
-        planCard(PlanModel(title: 'Đầu tư chứng khoán', category: 'Tài chính')),
-        planCard(PlanModel(title: 'Chạy bộ mỗi sáng', category: 'Sức khỏe')),
-      ],
-    );
+    return Column(children: samplePlans.map((plan) => planCard(plan)).toList());
   }
 
   @override
