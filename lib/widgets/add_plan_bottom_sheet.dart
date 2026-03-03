@@ -80,6 +80,11 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                         ),
                         style: const TextStyle(fontSize: 15),
                       ),
+                      TextButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.add),
+                        label: const Text('Thêm nhiệm vụ'),
+                      ),
                     ],
                   ),
                 ),
