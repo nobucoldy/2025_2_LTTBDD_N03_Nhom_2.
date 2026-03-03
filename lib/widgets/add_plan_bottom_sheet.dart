@@ -59,6 +59,30 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                     ),
                   ],
                 ),
+
+                Container(
+                  padding: const EdgeInsets.only(left: 20, top: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Giai đoạn 1:',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      TextField(
+                        decoration: const InputDecoration(
+                          hintText: 'Nhap giai đoạn 1:',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: InputBorder.none,
+                        ),
+                        style: const TextStyle(fontSize: 15),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
