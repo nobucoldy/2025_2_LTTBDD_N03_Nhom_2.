@@ -20,16 +20,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _currentContent = 'home';
   bool _isSettingsExpanded = false;
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Widget _buildMainContent() {
-    if (_currentContent == 'about') {
-      return const AboutScreen();
-    }
-
     return Column(
       children: [
         planCard('Kế hoạch 1'),
@@ -50,22 +45,34 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+
       drawer: AppDrawer(
         isDarkMode: widget.isDarkMode,
         onThemeChanged: widget.onThemeChanged,
         isSettingsExpanded: _isSettingsExpanded,
         onNavigate: (value) {
-          setState(() {
-            if (value == 'about') _currentContent = 'about';
-            if (value == 'settings') _isSettingsExpanded = !_isSettingsExpanded;
-          });
-          Navigator.pop(context);
+          Navigator.pop(context); // đóng drawer trước
+
+          if (value == 'about') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const AboutScreen()),
+            );
+            return;
+          }
+
+          if (value == 'settings') {
+            setState(() {
+              _isSettingsExpanded = !_isSettingsExpanded;
+            });
+          }
         },
       ),
 
       body: SafeArea(
         child: Column(
           children: [
+            // App bar tự custom
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -76,33 +83,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 IconButton(icon: const Icon(Icons.search), onPressed: () {}),
               ],
             ),
-            if (_currentContent == 'home')
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children:
-                      [
-                            'Tất cả',
-                            'Học tập',
-                            'Công việc',
-                            'Tài chính',
-                            'Sức khỏe',
-                          ]
-                          .map(
-                            (e) => Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: filterChip(e),
-                            ),
-                          )
-                          .toList(),
-                ),
+
+            // Filter chip (luôn hiển thị vì đây là Home)
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children:
+                    ['Tất cả', 'Học tập', 'Công việc', 'Tài chính', 'Sức khỏe']
+                        .map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: filterChip(e),
+                          ),
+                        )
+                        .toList(),
               ),
+            ),
+
             const SizedBox(height: 10),
+
+            // Nội dung chính
             Expanded(child: SingleChildScrollView(child: _buildMainContent())),
           ],
         ),
       ),
+
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
@@ -120,11 +126,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
           setState(() {
             _selectedIndex = index;
-            if (index == 0) {
-              _currentContent = 'home';
-            } else if (index == 2) {
-              _currentContent = 'profile';
-            }
           });
         },
         items: const [
