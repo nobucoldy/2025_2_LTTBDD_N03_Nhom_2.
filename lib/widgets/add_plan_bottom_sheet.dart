@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/category_box.dart';
+import '../widgets/quick_action.dart';
 
 class AddPlanBottomSheet extends StatefulWidget {
   const AddPlanBottomSheet({super.key});
@@ -41,7 +42,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                       onTap: () => _showCategoryPicker(context),
                     ),
                     const SizedBox(width: 6),
-                    _quickAction(
+                    QuickAction(
                       icon: Icons.calendar_today_outlined,
                       text: _startDate == null
                           ? 'Bắt đầu'
@@ -49,7 +50,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                       onTap: () => _pickDate(context, true),
                     ),
                     const SizedBox(width: 6),
-                    _quickAction(
+                    QuickAction(
                       icon: Icons.calendar_today_outlined,
                       text: _endDate == null
                           ? 'Kết thúc'
@@ -106,33 +107,4 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       },
     );
   }
-}
-
-Widget _quickAction({
-  required IconData icon,
-  required String text,
-  required VoidCallback onTap,
-}) {
-  return InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(16),
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16, color: Colors.grey.shade600),
-          const SizedBox(width: 4),
-          Text(
-            text,
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-          ),
-        ],
-      ),
-    ),
-  );
 }
