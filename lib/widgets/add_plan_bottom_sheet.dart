@@ -26,6 +26,9 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     PhaseModel(title: 'Giai đoạn 1', tasks: []),
   ];
 
+  int? _editingPhaseIndex;
+  final TextEditingController _taskController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -135,20 +138,52 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                   (task) => Padding(
                     padding: const EdgeInsets.only(left: 12, bottom: 4),
                     child: Row(
-                      children: const [
-                        Icon(Icons.circle, size: 6, color: Colors.grey),
-                        SizedBox(width: 6),
+                      children: [
+                        const Icon(Icons.circle, size: 6, color: Colors.grey),
+                        const SizedBox(width: 6),
+                        Text(task.title, style: const TextStyle(fontSize: 13)),
                       ],
                     ),
                   ),
                 ),
+                if (_editingPhaseIndex == index)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: TextField(
+                      controller: _taskController,
+                      autofocus: true,
+                      style: const TextStyle(fontSize: 13),
+                      decoration: const InputDecoration(
+                        hintText: 'Nhập nhiệm vụ...',
+                        isDense: true,
+                        border: InputBorder.none,
+                      ),
+                      onSubmitted: (value) {
+                        if (value.trim().isEmpty) {
+                          setState(() => _editingPhaseIndex = null);
+                          return;
+                        }
+
+                        setState(() {
+                          phase.tasks.add(TaskModel(title: value.trim()));
+                          _taskController.clear();
+                          _editingPhaseIndex = null;
+                        });
+                      },
+                    ),
+                  ),
 
                 TextButton.icon(
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,
-                    foregroundColor: Colors.grey,
+                    foregroundColor: Colors.grey.shade600,
                   ),
-                  onPressed: () => _addTask(index),
+                  onPressed: () {
+                    setState(() {
+                      _editingPhaseIndex = index;
+                      _taskController.clear();
+                    });
+                  },
                   icon: const Icon(Icons.add, size: 16),
                   label: const Text('Thêm nhiệm vụ'),
                 ),
