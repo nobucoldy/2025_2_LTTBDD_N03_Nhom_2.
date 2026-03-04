@@ -296,27 +296,153 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     );
   }
 
-  void _showCategoryPicker(BuildContext context) {
-    showModalBottomSheet(
+  void _showCategoryPicker(BuildContext context) async {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Navigator.of(context).overlay!.context.findRenderObject() as RenderBox;
+
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset(0, -10), ancestor: overlay),
+        button.localToGlobal(
+          button.size.bottomRight(Offset.zero),
+          ancestor: overlay,
+        ),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    final CategoryModel? selected = await showMenu<CategoryModel?>(
+      context: context,
+      position: position,
+      useRootNavigator: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 4,
+      constraints: const BoxConstraints(minWidth: 180, maxWidth: 220),
+      items: [
+        _buildPopupItem(
+          null,
+          'không có thể loại',
+          Icons.folder_open,
+          Colors.blueGrey,
+        ),
+        _buildPopupItem(
+          sampleCategories[0],
+          'Công việc',
+          Icons.business_center_outlined,
+          Colors.blue,
+        ),
+        _buildPopupItem(
+          sampleCategories[1],
+          'Cá nhân',
+          Icons.coffee_outlined,
+          Colors.green,
+        ),
+        _buildPopupItem(
+          sampleCategories[2],
+          'Danh sách yêu t...',
+          Icons.favorite_border,
+          Colors.purple,
+        ),
+        _buildPopupItem(
+          sampleCategories[3],
+          'Ngày sinh nhật',
+          Icons.cake_outlined,
+          Colors.orange,
+        ),
+
+        const PopupMenuDivider(height: 1),
+
+        PopupMenuItem(
+          height: 38,
+          onTap: () => Future.delayed(
+            Duration.zero,
+            () => _showAddCategoryDialog(context),
+          ),
+          child: Row(
+            children: const [
+              Icon(Icons.add, size: 18, color: Colors.purple),
+              SizedBox(width: 10),
+              Text(
+                'Thêm thể loại',
+                style: TextStyle(
+                  color: Colors.purple,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    if (selected != _category) {
+      setState(() => _category = selected);
+    }
+  }
+
+  PopupMenuItem<CategoryModel?> _buildPopupItem(
+    CategoryModel? value,
+    String text,
+    IconData icon,
+    Color color,
+  ) {
+    return PopupMenuItem<CategoryModel?>(
+      value: value,
+      height: 38,
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: color),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 13.5, color: Colors.black87),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddCategoryDialog(BuildContext context) {
+    final controller = TextEditingController();
+
+    showDialog(
       context: context,
       builder: (_) {
-        final categoriesWithNone = <CategoryModel?>[null, ...sampleCategories];
+        return AlertDialog(
+          title: const Text('Thêm thể loại'),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: const InputDecoration(hintText: 'Tên thể loại...'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Hủy'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (controller.text.trim().isEmpty) return;
 
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ...categoriesWithNone.map((category) {
-              return ListTile(
-                leading: category == null
-                    ? const Icon(Icons.clear, color: Colors.grey)
-                    : Icon(category.icon, color: Colors.purple),
-                title: Text(category?.name ?? 'Không có thể loại'),
-                onTap: () {
-                  setState(() => _category = category);
-                  Navigator.pop(context);
-                },
-              );
-            }),
+                setState(() {
+                  sampleCategories.add(
+                    CategoryModel(
+                      id: DateTime.now().toString(),
+                      name: controller.text.trim(),
+                      icon: Icons.label_outline,
+                    ),
+                  );
+                });
+
+                Navigator.pop(context);
+              },
+              child: const Text('Thêm'),
+            ),
           ],
         );
       },
