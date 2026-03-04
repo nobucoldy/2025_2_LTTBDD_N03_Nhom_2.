@@ -25,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _isSettingsExpanded = false;
   int _selectedIndex = 0;
-  late CategoryModel _selectedCategory;
+  late CategoryModel? _selectedCategory;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -37,7 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMainContent() {
     final filteredPlans = samplePlans.where((plan) {
-      return plan.category.id == _selectedCategory.id;
+      if (_selectedCategory == null) return true;
+      return plan.category.id == _selectedCategory!.id;
     }).toList();
 
     if (filteredPlans.isEmpty) {
@@ -102,21 +103,38 @@ class _HomeScreenState extends State<HomeScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
-                children: sampleCategories.map((category) {
-                  final isSelected = category.id == _selectedCategory.id;
-
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedCategory = category;
-                        });
-                      },
-                      child: filterChip(category.name, isSelected: isSelected),
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedCategory = null;
+                      });
+                    },
+                    child: filterChip(
+                      'Tất cả',
+                      isSelected: _selectedCategory == null,
                     ),
-                  );
-                }).toList(),
+                  ),
+                  const SizedBox(width: 8),
+
+                  ...sampleCategories.map((category) {
+                    final isSelected = _selectedCategory?.id == category.id;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedCategory = category;
+                          });
+                        },
+                        child: filterChip(
+                          category.name,
+                          isSelected: isSelected,
+                        ),
+                      ),
+                    );
+                  }),
+                ],
               ),
             ),
 
