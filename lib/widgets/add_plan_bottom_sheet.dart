@@ -162,6 +162,27 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2023),
       lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Colors.purple, // màu header
+              onPrimary: Colors.white, // màu chữ header
+              onSurface: Colors.black, // màu chữ ngày
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.purple, // màu nút cancel/ok
+              ),
+            ),
+          ),
+          child: SizedBox(
+            width: 300, // width nhỏ hơn
+            height: 400, // height nhỏ hơn
+            child: child,
+          ),
+        );
+      },
     );
 
     if (pickedDate != null) {
