@@ -7,6 +7,7 @@ import '../widgets/add_plan_bottom_sheet.dart';
 import '../data/plan_data.dart';
 import '../data/category_data.dart';
 import '../models/category_model.dart';
+import 'plan_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -52,7 +53,17 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Column(
-      children: filteredPlans.map((plan) => planCard(plan)).toList(),
+      children: filteredPlans.map((plan) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => PlanDetailScreen(plan: plan)),
+            );
+          },
+          child: planCard(plan),
+        );
+      }).toList(),
     );
   }
 
