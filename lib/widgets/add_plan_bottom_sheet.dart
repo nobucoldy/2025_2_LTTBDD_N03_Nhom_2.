@@ -326,30 +326,9 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
           Icons.folder_open,
           Colors.blueGrey,
         ),
-        _buildPopupItem(
-          sampleCategories[0],
-          'Công việc',
-          Icons.business_center_outlined,
-          Colors.blue,
-        ),
-        _buildPopupItem(
-          sampleCategories[1],
-          'Cá nhân',
-          Icons.coffee_outlined,
-          Colors.green,
-        ),
-        _buildPopupItem(
-          sampleCategories[2],
-          'Danh sách yêu t...',
-          Icons.favorite_border,
-          Colors.purple,
-        ),
-        _buildPopupItem(
-          sampleCategories[3],
-          'Ngày sinh nhật',
-          Icons.cake_outlined,
-          Colors.orange,
-        ),
+        ...sampleCategories.map((cat) {
+          return _buildPopupItem(cat, cat.name, cat.icon, Colors.purple);
+        }),
 
         const PopupMenuDivider(height: 1),
 
