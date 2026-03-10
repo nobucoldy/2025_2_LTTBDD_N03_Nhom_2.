@@ -22,7 +22,6 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   DateTime? _endDate;
 
   final TextEditingController _titleController = TextEditingController();
-
   final List<PhaseModel> _phases = [
     PhaseModel(title: 'Giai đoạn 1', tasks: []),
   ];
@@ -34,83 +33,127 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.65,
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.8,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: 12, bottom: 8),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+
           Expanded(
             child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 8,
-                ),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextField(
                       controller: _titleController,
-                      decoration: const InputDecoration(
-                        hintText: 'Nhập kế hoạch mới tại đây',
-                        hintStyle: TextStyle(color: Colors.grey),
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Tên kế hoạch của bạn...',
+                        hintStyle: TextStyle(color: Colors.grey[400]),
                         border: InputBorder.none,
                       ),
-                      style: const TextStyle(fontSize: 15),
+                    ),
+                    const SizedBox(height: 15),
+
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          CategoryBox(
+                            category: _category,
+                            onTap: () => _showCategoryPicker(context),
+                          ),
+                          const SizedBox(width: 8),
+                          _buildQuickActionButton(
+                            icon: Icons.calendar_today_rounded,
+                            label: _startDate == null
+                                ? 'Bắt đầu'
+                                : '${_startDate!.day}/${_startDate!.month}',
+                            onTap: () => _pickDate(context, true),
+                          ),
+                          const SizedBox(width: 8),
+                          _buildQuickActionButton(
+                            icon: Icons.arrow_forward_rounded,
+                            label: _endDate == null
+                                ? 'Kết thúc'
+                                : '${_endDate!.day}/${_endDate!.month}',
+                            onTap: () => _pickDate(context, false),
+                          ),
+                        ],
+                      ),
                     ),
 
-                    const SizedBox(height: 8),
-
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CategoryBox(
-                          category: _category,
-                          onTap: () => _showCategoryPicker(context),
-                        ),
-                        const SizedBox(width: 6),
-                        QuickAction(
-                          icon: Icons.calendar_today_outlined,
-                          text: _startDate == null
-                              ? 'Bắt đầu'
-                              : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
-                          onTap: () => _pickDate(context, true),
-                        ),
-                        const SizedBox(width: 6),
-                        QuickAction(
-                          icon: Icons.calendar_today_outlined,
-                          text: _endDate == null
-                              ? 'Kết thúc'
-                              : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
-                          onTap: () => _pickDate(context, false),
-                        ),
-                      ],
+                    const SizedBox(height: 25),
+                    const Text(
+                      "LỘ TRÌNH THỰC HIỆN",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.grey,
+                        letterSpacing: 1.2,
+                      ),
                     ),
-
                     const SizedBox(height: 12),
-
                     _buildPhases(),
                   ],
                 ),
               ),
             ),
           ),
+          _buildSaveButton(),
+        ],
+      ),
+    );
+  }
 
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: SizedBox(
-              width: double.infinity,
-              height: 44,
-              child: ElevatedButton(
-                onPressed: _savePlan,
-                child: const Text(
-                  'Lưu',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
+  Widget _buildQuickActionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 16, color: Colors.blueGrey[700]),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.blueGrey[800],
+                fontWeight: FontWeight.w500,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -121,125 +164,147 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
         ..._phases.asMap().entries.map((entry) {
           final index = entry.key;
           final phase = entry.value;
-
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+          return Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.grey[200]!),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (_editingPhaseTitleIndex == index)
-                  TextField(
-                    controller: _phaseTitleController,
-                    autofocus: true,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: 'Tên giai đoạn...',
-                      border: InputBorder.none,
-                      isDense: true,
-                    ),
-
-                    onSubmitted: _savePhaseTitle,
-                    onTapOutside: (_) =>
-                        _savePhaseTitle(_phaseTitleController.text),
-                  )
-                else
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _editingPhaseTitleIndex = index;
-                        _phaseTitleController.text = phase.title;
-                      });
-                    },
-                    child: Text(
-                      phase.title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 12,
+                      backgroundColor: Colors.purple[100],
+                      child: Text(
+                        "${index + 1}",
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.purple,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-
-                const SizedBox(height: 6),
-
-                ...phase.tasks.map((task) {
-                  return Padding(
-                    padding: const EdgeInsets.only(left: 12, bottom: 4),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _editingPhaseTitleIndex == index
+                          ? TextField(
+                              controller: _phaseTitleController,
+                              autofocus: true,
+                              onSubmitted: _savePhaseTitle,
+                              onTapOutside: (_) =>
+                                  _savePhaseTitle(_phaseTitleController.text),
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                isDense: true,
+                              ),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _editingPhaseTitleIndex = index;
+                                  _phaseTitleController.text = phase.title;
+                                });
+                              },
+                              child: Text(
+                                phase.title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                    ),
+                  ],
+                ),
+                const Divider(height: 24),
+                ...phase.tasks.map(
+                  (task) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8, left: 4),
                     child: Row(
                       children: [
-                        const Icon(Icons.circle, size: 6, color: Colors.grey),
-                        const SizedBox(width: 6),
-                        Text(task.title, style: const TextStyle(fontSize: 13)),
+                        Icon(
+                          Icons.check_circle_outline,
+                          size: 18,
+                          color: Colors.grey[400],
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          task.title,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black87,
+                          ),
+                        ),
                       ],
                     ),
-                  );
-                }),
-
+                  ),
+                ),
                 if (_editingPhaseIndex == index)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: TextField(
-                      controller: _taskController,
-                      autofocus: true,
-                      style: const TextStyle(fontSize: 13),
-                      decoration: const InputDecoration(
-                        hintText: 'Nhập nhiệm vụ...',
-                        border: InputBorder.none,
-                        isDense: true,
-                      ),
-
-                      onSubmitted: (value) {
-                        if (value.trim().isEmpty) {
-                          setState(() => _editingPhaseIndex = null);
-                          return;
-                        }
-
-                        _addTask(index, value.trim());
-                      },
-
-                      onTapOutside: (_) {
-                        final value = _taskController.text.trim();
-
-                        if (value.isEmpty) {
-                          setState(() => _editingPhaseIndex = null);
-                          return;
-                        }
-
-                        _addTask(index, value);
-                      },
+                  TextField(
+                    controller: _taskController,
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      hintText: 'Việc cần làm...',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.only(left: 28),
+                    ),
+                    onSubmitted: (val) => _addTask(index, val),
+                    onTapOutside: (_) => _addTask(index, _taskController.text),
+                  )
+                else
+                  TextButton.icon(
+                    onPressed: () => setState(() => _editingPhaseIndex = index),
+                    icon: const Icon(Icons.add_rounded, size: 18),
+                    label: const Text("Thêm nhiệm vụ"),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.grey[600],
                     ),
                   ),
-
-                TextButton.icon(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    foregroundColor: Colors.grey.shade600,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _editingPhaseIndex = index;
-                      _taskController.clear();
-                    });
-                  },
-                  icon: const Icon(Icons.add, size: 16),
-                  label: const Text('Thêm nhiệm vụ'),
-                ),
               ],
             ),
           );
         }),
-
-        TextButton.icon(
+        OutlinedButton.icon(
           onPressed: _addPhase,
-          icon: const Icon(Icons.add),
-          label: const Text(
-            'Thêm giai đoạn',
-            style: TextStyle(color: Colors.purple),
+          icon: const Icon(Icons.add_road_rounded),
+          label: const Text('Thêm giai đoạn mới'),
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 48),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            side: BorderSide(color: Colors.purple[100]!),
+            foregroundColor: Colors.purple,
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildSaveButton() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
+      color: Colors.white,
+      child: ElevatedButton(
+        onPressed: _savePlan,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          minimumSize: const Size(double.infinity, 54),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+        ),
+        child: const Text(
+          'Tạo kế hoạch ngay',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+      ),
     );
   }
 
@@ -254,42 +319,22 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   }
 
   void _addTask(int phaseIndex, String title) {
+    if (title.trim().isEmpty) {
+      setState(() => _editingPhaseIndex = null);
+      return;
+    }
     setState(() {
-      _phases[phaseIndex].tasks.add(TaskModel(title: title));
+      _phases[phaseIndex].tasks.add(TaskModel(title: title.trim()));
       _editingPhaseIndex = null;
       _taskController.clear();
     });
   }
 
-  void _savePlan() {
-    if (_titleController.text.trim().isEmpty) {
-      showToast('Vui lòng nhập tên kế hoạch');
-      return;
+  void _savePhaseTitle(String value) {
+    if (value.trim().isNotEmpty && _editingPhaseTitleIndex != null) {
+      setState(() => _phases[_editingPhaseTitleIndex!].title = value.trim());
     }
-
-    for (int i = 0; i < _phases.length; i++) {
-      if (_phases[i].tasks.isEmpty) {
-        showToast('Giai đoạn ${i + 1} chưa có nhiệm vụ');
-        return;
-      }
-    }
-
-    _startDate ??= DateTime.now();
-    _endDate ??= DateTime.now();
-
-    if (_endDate!.isBefore(_startDate!)) {
-      _endDate = _startDate;
-    }
-
-    final newPlan = PlanModel(
-      title: _titleController.text.trim(),
-      category: _category,
-      startDate: _startDate,
-      endDate: _endDate,
-      phases: List.from(_phases),
-    );
-
-    Navigator.pop(context, newPlan);
+    setState(() => _editingPhaseTitleIndex = null);
   }
 
   Future<void> _pickDate(BuildContext context, bool isStart) async {
@@ -300,23 +345,41 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (_) {
-        return CustomDatePicker(
-          initialDate: initial,
-          onDateSelected: (date) {
-            setState(() {
-              if (isStart) {
-                _startDate = date;
-              } else {
-                _endDate = date;
-              }
-            });
-          },
-        );
-      },
+      builder: (_) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            CustomDatePicker(
+              initialDate: initial,
+              onDateSelected: (date) {
+                setState(() {
+                  if (isStart)
+                    _startDate = date;
+                  else
+                    _endDate = date;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
     );
   }
 
@@ -324,10 +387,9 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final RenderBox overlay =
         Navigator.of(context).overlay!.context.findRenderObject() as RenderBox;
-
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
-        button.localToGlobal(Offset(0, -10), ancestor: overlay),
+        button.localToGlobal(const Offset(0, 45), ancestor: overlay),
         button.localToGlobal(
           button.size.bottomRight(Offset.zero),
           ancestor: overlay,
@@ -339,50 +401,34 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     final CategoryModel? selected = await showMenu<CategoryModel?>(
       context: context,
       position: position,
-      useRootNavigator: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
-      constraints: const BoxConstraints(minWidth: 180, maxWidth: 220),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       items: [
         _buildPopupItem(
           null,
-          'không có thể loại',
-          Icons.folder_open,
-          Colors.blueGrey,
+          'Không thể loại',
+          Icons.folder_off_rounded,
+          Colors.grey,
         ),
-        ...sampleCategories.map((cat) {
-          return _buildPopupItem(cat, cat.name, cat.icon, Colors.purple);
-        }),
-
-        const PopupMenuDivider(height: 1),
-
+        ...sampleCategories.map(
+          (cat) => _buildPopupItem(cat, cat.name, cat.icon, Colors.purple),
+        ),
+        const PopupMenuDivider(),
         PopupMenuItem(
-          height: 38,
           onTap: () => Future.delayed(
             Duration.zero,
             () => _showAddCategoryDialog(context),
           ),
-          child: Row(
-            children: const [
-              Icon(Icons.add, size: 18, color: Colors.purple),
-              SizedBox(width: 10),
-              Text(
-                'Thêm thể loại',
-                style: TextStyle(
-                  color: Colors.purple,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+          child: const Row(
+            children: [
+              Icon(Icons.add, color: Colors.purple),
+              SizedBox(width: 8),
+              Text('Thêm mới'),
             ],
           ),
         ),
       ],
     );
-
-    if (selected != _category) {
-      setState(() => _category = selected);
-    }
+    if (selected != _category) setState(() => _category = selected);
   }
 
   PopupMenuItem<CategoryModel?> _buildPopupItem(
@@ -393,18 +439,11 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   ) {
     return PopupMenuItem<CategoryModel?>(
       value: value,
-      height: 38,
       child: Row(
         children: [
           Icon(icon, size: 18, color: color),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(fontSize: 13.5, color: Colors.black87),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
+          Text(text),
         ],
       ),
     );
@@ -412,66 +451,59 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
   void _showAddCategoryDialog(BuildContext context) {
     final controller = TextEditingController();
-
     showDialog(
       context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: const Text('Thêm thể loại'),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: const InputDecoration(hintText: 'Tên thể loại...'),
+      builder: (_) => AlertDialog(
+        title: const Text('Thêm thể loại'),
+        content: TextField(controller: controller, autofocus: true),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Hủy'),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Hủy'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (controller.text.trim().isEmpty) return;
-
-                setState(() {
-                  sampleCategories.add(
+          ElevatedButton(
+            onPressed: () {
+              if (controller.text.trim().isNotEmpty) {
+                setState(
+                  () => sampleCategories.add(
                     CategoryModel(
                       id: DateTime.now().toString(),
                       name: controller.text.trim(),
                       icon: Icons.label_outline,
                     ),
-                  );
-                });
-
+                  ),
+                );
                 Navigator.pop(context);
-              },
-              child: const Text('Thêm'),
-            ),
-          ],
-        );
-      },
+              }
+            },
+            child: const Text('Thêm'),
+          ),
+        ],
+      ),
     );
+  }
+
+  void _savePlan() {
+    if (_titleController.text.trim().isEmpty) {
+      showToast('Vui lòng nhập tên kế hoạch');
+      return;
+    }
+    final newPlan = PlanModel(
+      title: _titleController.text.trim(),
+      category: _category,
+      startDate: _startDate ?? DateTime.now(),
+      endDate: _endDate ?? DateTime.now(),
+      phases: List.from(_phases),
+    );
+    Navigator.pop(context, newPlan);
   }
 
   void showToast(String message) {
     Fluttertoast.showToast(
       msg: message,
       gravity: ToastGravity.TOP,
-      backgroundColor: Colors.white,
-      textColor: Colors.black,
-      fontSize: 14,
+      backgroundColor: Colors.black87,
+      textColor: Colors.white,
     );
-  }
-
-  void _savePhaseTitle(String value) {
-    final newTitle = value.trim();
-
-    setState(() {
-      if (newTitle.isNotEmpty && _editingPhaseTitleIndex != null) {
-        _phases[_editingPhaseTitleIndex!].title = newTitle;
-      }
-      _editingPhaseTitleIndex = null;
-    });
-
-    FocusScope.of(context).unfocus();
   }
 }
