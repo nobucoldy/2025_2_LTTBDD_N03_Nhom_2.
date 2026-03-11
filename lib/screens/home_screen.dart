@@ -68,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: groupedPlans.entries.map((entry) {
-        // <--- Biến entry bắt đầu từ đây
         if (entry.value.isEmpty) return Container();
 
         return Padding(
@@ -76,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Tiêu đề nhóm (Hôm nay, Ngày mai...)
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10, bottom: 4),
                 child: Text(
@@ -97,18 +95,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       key: ObjectKey(plan),
                       endActionPane: ActionPane(
                         motion: const DrawerMotion(),
-                        extentRatio: 0.5,
+
+                        extentRatio: 0.35,
                         children: [
                           CustomSlidableAction(
                             onPressed: (context) {},
                             backgroundColor: Colors.transparent,
+                            padding: EdgeInsets.zero,
                             child: _buildActionButton(
-                              icon: Icons.edit_rounded,
-                              color: Colors.blueAccent,
-                              label: 'Sửa',
+                              icon: Icons.calendar_month_rounded,
+                              color: Colors.orangeAccent,
+                              label: 'Hạn chót',
                             ),
                           ),
-                          // Nút Xóa
                           CustomSlidableAction(
                             onPressed: (context) {
                               setState(() {
@@ -116,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               });
                             },
                             backgroundColor: Colors.transparent,
+                            padding: EdgeInsets.zero,
                             child: _buildActionButton(
                               icon: Icons.delete_outline_rounded,
                               color: Colors.redAccent,
@@ -307,27 +307,31 @@ class _HomeScreenState extends State<HomeScreen> {
     required String label,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 8),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: color, size: 20),
+          const SizedBox(height: 2),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
