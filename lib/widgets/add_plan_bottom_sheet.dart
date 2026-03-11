@@ -18,7 +18,7 @@ class AddPlanBottomSheet extends StatefulWidget {
 
 class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   CategoryModel? _category;
-  DateTime? _startDate;
+  DateTime? _startDate = DateTime.now();
   DateTime? _endDate;
 
   final TextEditingController _titleController = TextEditingController();
