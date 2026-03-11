@@ -2,11 +2,11 @@ import 'category_model.dart';
 import 'phase_model.dart';
 
 class PlanModel {
-  final String title;
-  final CategoryModel? category;
+  String title;
+  CategoryModel? category;
   DateTime? startDate;
   DateTime? endDate;
-  final List<PhaseModel> phases;
+  List<PhaseModel> phases;
   bool isDone;
 
   PlanModel({
