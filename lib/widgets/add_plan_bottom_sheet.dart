@@ -131,48 +131,63 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   }
 
   Widget _buildTopActions() {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        InfoChip(
-          key: _categoryKey,
-          icon: _category?.icon ?? Icons.folder_open,
-          label: _category?.name ?? 'Thể loại',
-          color: Colors.purple[50]!,
-          iconColor: Colors.purple,
-          onTap: () async {
-            final selected = await CategoryPickerService.show(
-              context: context,
-              anchorKey: _categoryKey,
-            );
-
-            if (selected != null) {
+        SizedBox(
+          width: 125,
+          height: 40,
+          child: InfoChip(
+            key: _categoryKey,
+            icon: _category?.icon ?? Icons.folder_open,
+            label: _category?.name ?? 'Thể loại',
+            color: Colors.purple[50]!,
+            iconColor: Colors.purple,
+            onTap: () async {
+              final selected = await CategoryPickerService.show(
+                context: context,
+                anchorKey: _categoryKey,
+              );
+              if (selected == null) {
+                setState(() => _category = null);
+                return;
+              }
               if (selected.id == 'add_new_id') {
                 _showAddCategoryDialog();
               } else {
                 setState(() => _category = selected);
               }
-            }
-          },
+            },
+          ),
         ),
-        InfoChip(
-          icon: Icons.calendar_today_rounded,
-          label: _startDate == null
-              ? 'Bắt đầu'
-              : "${_startDate!.day}/${_startDate!.month}",
-          color: Colors.orange[50]!,
-          iconColor: Colors.orange[700]!,
-          onTap: () => _pickDate(true),
+        const SizedBox(width: 8),
+        SizedBox(
+          width: 90,
+          height: 40,
+          child: InfoChip(
+            icon: Icons.calendar_today_rounded,
+            label: _startDate == null
+                ? 'Bắt đầu'
+                : "${_startDate!.day}/${_startDate!.month}",
+            color: Colors.orange[50]!,
+            iconColor: Colors.orange[700]!,
+            onTap: () => _pickDate(true),
+          ),
         ),
-        InfoChip(
-          icon: Icons.arrow_forward_rounded,
-          label: _endDate == null
-              ? 'Kết thúc'
-              : "${_endDate!.day}/${_endDate!.month}",
-          color: Colors.blue[50]!,
-          iconColor: Colors.blue[700]!,
-          onTap: () => _pickDate(false),
+        const SizedBox(width: 8),
+
+        SizedBox(
+          width: 90,
+          height: 40,
+          child: InfoChip(
+            icon: Icons.arrow_forward_rounded,
+            label: _endDate == null
+                ? 'Kết thúc'
+                : "${_endDate!.day}/${_endDate!.month}",
+            color: Colors.blue[50]!,
+            iconColor: Colors.blue[700]!,
+            onTap: () => _pickDate(false),
+          ),
         ),
       ],
     );

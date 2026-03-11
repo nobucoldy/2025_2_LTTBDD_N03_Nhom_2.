@@ -113,42 +113,60 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                 children: [
                   const SizedBox(height: 16),
 
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      InfoChip(
-                        key: _categoryKey,
-                        icon: plan.category?.icon ?? Icons.folder_open,
-                        label: plan.category?.name ?? 'Thể loại',
-                        color: Colors.purple[50]!,
-                        iconColor: Colors.purple,
-                        onTap: () async {
-                          final selected = await CategoryPickerService.show(
-                            context: context,
-                            anchorKey: _categoryKey,
-                          );
-                          if (selected != null)
-                            setState(() => plan.category = selected);
-                        },
+                      SizedBox(
+                        width: 125,
+                        height: 40,
+                        child: InfoChip(
+                          key: _categoryKey,
+                          icon: plan.category?.icon ?? Icons.folder_open,
+                          label: plan.category?.name ?? 'Thể loại',
+                          color: Colors.purple[50]!,
+                          iconColor: Colors.purple,
+                          onTap: () async {
+                            final selected = await CategoryPickerService.show(
+                              context: context,
+                              anchorKey: _categoryKey,
+                            );
+                            if (selected == null) {
+                              setState(() => plan.category = null);
+                            } else if (selected.id != 'add_new_id') {
+                              setState(() => plan.category = selected);
+                            }
+                          },
+                        ),
                       ),
-                      InfoChip(
-                        icon: Icons.calendar_today_rounded,
-                        label: plan.startDate == null
-                            ? 'Bắt đầu'
-                            : '${plan.startDate!.day}/${plan.startDate!.month}',
-                        color: Colors.orange[50]!,
-                        iconColor: Colors.orange[700]!,
-                        onTap: () => _pickDate(true),
+                      const SizedBox(width: 8),
+
+                      SizedBox(
+                        width: 85,
+                        height: 40,
+                        child: InfoChip(
+                          icon: Icons.calendar_today_rounded,
+                          label: plan.startDate == null
+                              ? 'Bắt đầu'
+                              : '${plan.startDate!.day}/${plan.startDate!.month}',
+                          color: Colors.orange[50]!,
+                          iconColor: Colors.orange[700]!,
+                          onTap: () => _pickDate(true),
+                        ),
                       ),
-                      InfoChip(
-                        icon: Icons.arrow_forward_rounded,
-                        label: plan.endDate == null
-                            ? 'Kết thúc'
-                            : '${plan.endDate!.day}/${plan.endDate!.month}',
-                        color: Colors.blue[50]!,
-                        iconColor: Colors.blue[700]!,
-                        onTap: () => _pickDate(false),
+                      const SizedBox(width: 8),
+
+                      SizedBox(
+                        width: 85,
+                        height: 40,
+                        child: InfoChip(
+                          icon: Icons.arrow_forward_rounded,
+                          label: plan.endDate == null
+                              ? 'Kết thúc'
+                              : '${plan.endDate!.day}/${plan.endDate!.month}',
+                          color: Colors.blue[50]!,
+                          iconColor: Colors.blue[700]!,
+                          onTap: () => _pickDate(false),
+                        ),
                       ),
                     ],
                   ),

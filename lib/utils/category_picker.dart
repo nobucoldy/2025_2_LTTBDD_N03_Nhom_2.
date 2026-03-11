@@ -26,28 +26,34 @@ class CategoryPickerService {
     return await showMenu<CategoryModel?>(
       context: context,
       position: position,
-      constraints: const BoxConstraints(maxWidth: 220, maxHeight: 350),
+      constraints: const BoxConstraints(maxWidth: 220, maxHeight: 400),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       items: [
-        _buildPopupItem(
-          null,
-          'Không thể loại',
-          Icons.folder_off_rounded,
-          Colors.grey,
+        const PopupMenuItem<CategoryModel?>(
+          value: null,
+          child: Row(
+            children: [
+              Icon(Icons.folder_off_rounded, size: 18, color: Colors.grey),
+              SizedBox(width: 12),
+              Text('Không có thể loại', style: TextStyle(fontSize: 14)),
+            ],
+          ),
         ),
+        const PopupMenuDivider(),
 
         ...sampleCategories.map(
           (cat) => _buildPopupItem(cat, cat.name, cat.icon, Colors.purple),
         ),
 
         const PopupMenuDivider(),
-        PopupMenuItem<CategoryModel?>(
-          value: const CategoryModel(
+
+        const PopupMenuItem<CategoryModel?>(
+          value: CategoryModel(
             id: 'add_new_id',
             name: 'Add New',
             icon: Icons.add,
           ),
-          child: const Row(
+          child: Row(
             children: [
               Icon(Icons.add_circle_outline, size: 18, color: Colors.blue),
               SizedBox(width: 12),
