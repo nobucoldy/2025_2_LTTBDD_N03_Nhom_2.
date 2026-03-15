@@ -55,9 +55,11 @@ class _HomeScreenState extends State<HomeScreen> {
       final matchesCategory =
           _selectedCategory == null ||
           plan.category?.id == _selectedCategory!.id;
+
+      final translatedTitle = t(plan.title).toLowerCase();
       final matchesSearch =
-          _searchQuery.isEmpty ||
-          plan.title.toLowerCase().contains(_searchQuery);
+          _searchQuery.isEmpty || translatedTitle.contains(_searchQuery);
+
       return matchesCategory && matchesSearch;
     }).toList();
 
@@ -82,10 +84,14 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         ...groupedActive.entries.map((entry) {
           if (entry.value.isEmpty) return const SizedBox.shrink();
-          return _buildSection(entry.key, entry.value);
+          return _buildSection(t(entry.key), entry.value);
         }),
         if (completedPlans.isNotEmpty)
-          _buildSection("Đã hoàn thành", completedPlans, isDoneSection: true),
+          _buildSection(
+            t('completed_title'),
+            completedPlans,
+            isDoneSection: true,
+          ),
         const SizedBox(height: 80),
       ],
     );
@@ -134,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
               });
               AlertUtils.show(
                 context,
-                "Chúc mừng! Bạn đã hoàn thành toàn bộ lộ trình '${plan.title}'",
+                "${t('msg_success_done')} '${t(plan.title)}'",
               );
             },
             backgroundColor: Colors.transparent,
@@ -151,8 +157,10 @@ class _HomeScreenState extends State<HomeScreen> {
               showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(
-                  title: Text(t('confirm_delete')),
-                  content: Text("${t('delete_msg')} '${plan.title}'?"),
+                  title: Text(t('confirm_delete_content')),
+                  content: Text(
+                    "${t('confirm_delete_title')} '${t(plan.title)}'?",
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(ctx),
@@ -162,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         setState(() => samplePlans.remove(plan));
                         Navigator.pop(ctx);
-                        AlertUtils.show(context, t('delete_success'));
+                        AlertUtils.show(context, t('msg_success_delete'));
                       },
                       child: Text(
                         t('btn_delete'),

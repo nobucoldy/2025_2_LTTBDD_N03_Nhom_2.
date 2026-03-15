@@ -13,6 +13,7 @@ class CategoryPickerService {
 
     final RenderBox button =
         anchorKey.currentContext!.findRenderObject() as RenderBox;
+
     final RenderBox overlay =
         Navigator.of(context).overlay!.context.findRenderObject() as RenderBox;
 
@@ -27,7 +28,7 @@ class CategoryPickerService {
       Offset.zero & overlay.size,
     );
 
-    return await showMenu<CategoryModel?>(
+    final result = await showMenu<CategoryModel?>(
       context: context,
       position: position,
       constraints: const BoxConstraints(maxWidth: 220, maxHeight: 400),
@@ -47,6 +48,7 @@ class CategoryPickerService {
             ],
           ),
         ),
+
         const PopupMenuDivider(),
 
         ...sampleCategories.map(
@@ -81,6 +83,8 @@ class CategoryPickerService {
         ),
       ],
     );
+
+    return result;
   }
 
   static PopupMenuItem<CategoryModel?> _buildPopupItem(

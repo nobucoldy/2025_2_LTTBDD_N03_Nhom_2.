@@ -172,9 +172,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   Widget _buildTopActions() {
     return Row(
       children: [
-        SizedBox(
-          width: 125,
-          height: 40,
+        Expanded(
           child: InfoChip(
             key: _categoryKey,
             icon: _category?.icon ?? Icons.folder_open,
@@ -188,23 +186,39 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                 anchorKey: _categoryKey,
                 locale: widget.locale,
               );
+
               if (selected?.id == 'add_new_id') {
-                _showAddCategoryDialog();
+                Future.delayed(const Duration(milliseconds: 200), () {
+                  _showAddCategoryDialog();
+                });
               } else {
                 setState(() => _category = selected);
               }
             },
           ),
         ),
+
         const SizedBox(width: 8),
-        _dateChip(
-          _startDate,
-          t('add_start'),
-          Colors.orange,
-          () => _pickDate(true),
+
+        Expanded(
+          child: _dateChip(
+            _startDate,
+            t('add_start'),
+            Colors.orange,
+            () => _pickDate(true),
+          ),
         ),
+
         const SizedBox(width: 8),
-        _dateChip(_endDate, t('add_end'), Colors.blue, () => _pickDate(false)),
+
+        Expanded(
+          child: _dateChip(
+            _endDate,
+            t('add_end'),
+            Colors.blue,
+            () => _pickDate(false),
+          ),
+        ),
       ],
     );
   }
@@ -216,7 +230,6 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     VoidCallback onTap,
   ) {
     return SizedBox(
-      width: 90,
       height: 40,
       child: InfoChip(
         icon: label == t('add_start')

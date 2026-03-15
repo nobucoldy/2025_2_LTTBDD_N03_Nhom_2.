@@ -20,40 +20,27 @@ class InfoChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, size: 16, color: iconColor),
-            const SizedBox(width: 4),
-            Expanded(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 1,
-                        maxWidth: constraints.maxWidth * 1.5,
-                      ),
-                      child: Text(
-                        label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: iconColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                  );
-                },
+            const SizedBox(width: 6),
+
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: iconColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
               ),
             ),
           ],

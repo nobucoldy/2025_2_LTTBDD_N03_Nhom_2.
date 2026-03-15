@@ -64,24 +64,9 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              "${t('date_ends_at')}: ${tempDate.day}/${tempDate.month}/${tempDate.year}",
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.purple,
-                fontSize: 14,
-              ),
-            ),
-          ),
-          Text(
-            t('date_calc_from_start'),
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
-          ),
-          const SizedBox(height: 12),
+
           Wrap(
-            spacing: 10,
+            spacing: 12,
             children: [
               _buildMonthBtn(t('date_1m'), 1),
               _buildMonthBtn(t('date_3m'), 3),
@@ -108,7 +93,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
               child: Text(t('date_confirm')),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
         ],
       ),
     );

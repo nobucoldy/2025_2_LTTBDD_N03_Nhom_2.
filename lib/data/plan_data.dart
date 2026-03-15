@@ -3,96 +3,117 @@ import '../models/phase_model.dart';
 import '../models/task_model.dart';
 import 'category_data.dart';
 
+dynamic _getCat(String id) {
+  return sampleCategories.firstWhere(
+    (c) => c.id == id,
+    orElse: () => sampleCategories.first,
+  );
+}
+
 final List<PlanModel> samplePlans = [
   PlanModel(
-    title: 'Chinh phục IELTS 7.0',
-    category: sampleCategories.firstWhere((c) => c.id == 'study'),
+    title: 'plan_finance_title',
+    category: _getCat('finance'),
     startDate: DateTime(2026, 1, 1),
-    endDate: DateTime(2026, 6, 30),
+    endDate: DateTime(2027, 12, 31),
     phases: [
       PhaseModel(
-        title: 'Xây dựng nền tảng (Tháng 1-2)',
+        title: 'plan_finance_p1',
         tasks: [
-          TaskModel(title: 'Học 500 từ vựng cốt lõi', isDone: true),
-          TaskModel(title: 'Ôn tập 12 thì tiếng Anh', isDone: true),
-          TaskModel(title: 'Luyện nghe podcast hằng ngày', isDone: false),
+          TaskModel(title: 'plan_finance_p1_t1', isDone: true),
+          TaskModel(title: 'plan_finance_p1_t2', isDone: true),
+          TaskModel(title: 'plan_finance_p1_t3', isDone: false),
         ],
       ),
       PhaseModel(
-        title: 'Kỹ thuật làm bài (Tháng 3-4)',
+        title: 'plan_finance_p2',
         tasks: [
-          TaskModel(
-            title: 'Luyện phương pháp Skimming/Scanning',
-            isDone: false,
-          ),
-          TaskModel(title: 'Học cấu trúc Writing Task 2', isDone: false),
+          TaskModel(title: 'plan_finance_p2_t1', isDone: false),
+          TaskModel(title: 'plan_finance_p2_t2', isDone: false),
+          TaskModel(title: 'plan_finance_p2_t3', isDone: false),
         ],
       ),
       PhaseModel(
-        title: 'Giải đề & Về đích (Tháng 5-6)',
+        title: 'plan_finance_p3',
         tasks: [
-          TaskModel(title: 'Giải 20 bộ đề Cambridge', isDone: false),
-          TaskModel(title: 'Thi thử tại trung tâm', isDone: false),
+          TaskModel(title: 'plan_finance_p3_t1', isDone: false),
+          TaskModel(title: 'plan_finance_p3_t2', isDone: false),
         ],
       ),
     ],
   ),
 
   PlanModel(
-    title: 'Lộ trình Marathon 21km',
-    category: sampleCategories.firstWhere((c) => c.id == 'health'),
+    title: 'plan_flutter_title',
+    category: _getCat('work'),
+    startDate: DateTime(2026, 3, 1),
+    endDate: DateTime(2027, 3, 1),
+    phases: [
+      PhaseModel(
+        title: 'plan_flutter_p1',
+        tasks: [
+          TaskModel(title: 'plan_flutter_p1_t1', isDone: true),
+          TaskModel(title: 'plan_flutter_p1_t2', isDone: false),
+        ],
+      ),
+      PhaseModel(
+        title: 'plan_flutter_p2',
+        tasks: [
+          TaskModel(title: 'plan_flutter_p2_t1', isDone: false),
+          TaskModel(title: 'plan_flutter_p2_t2', isDone: false),
+        ],
+      ),
+      PhaseModel(
+        title: 'plan_flutter_p3',
+        tasks: [
+          TaskModel(title: 'plan_flutter_p3_t1', isDone: false),
+          TaskModel(title: 'plan_flutter_p3_t2', isDone: false),
+        ],
+      ),
+    ],
+  ),
+
+  PlanModel(
+    title: 'plan_life_title',
+    category: _getCat('life'),
+    startDate: DateTime.now().subtract(const Duration(days: 5)),
+    endDate: DateTime.now().add(const Duration(days: 60)),
+    phases: [
+      PhaseModel(
+        title: 'plan_life_p1',
+        tasks: [
+          TaskModel(title: 'plan_life_p1_t1', isDone: true),
+          TaskModel(title: 'plan_life_p1_t2', isDone: false),
+        ],
+      ),
+      PhaseModel(
+        title: 'plan_life_p2',
+        tasks: [
+          TaskModel(title: 'plan_life_p2_t1', isDone: true),
+          TaskModel(title: 'plan_life_p2_t2', isDone: false),
+        ],
+      ),
+    ],
+  ),
+
+  PlanModel(
+    title: 'plan_ja_title',
+    category: _getCat('study'),
     startDate: DateTime.now(),
-    endDate: DateTime.now().add(const Duration(days: 90)),
+    endDate: DateTime.now().add(const Duration(days: 180)),
     phases: [
       PhaseModel(
-        title: 'Làm quen cơ thể (Tuần 1-4)',
+        title: 'plan_ja_p1',
         tasks: [
-          TaskModel(title: 'Chạy bộ 3km nhẹ nhàng', isDone: true),
-          TaskModel(title: 'Mua giày chạy chuyên dụng', isDone: true),
+          TaskModel(title: 'plan_ja_p1_t1', isDone: true),
+          TaskModel(title: 'plan_ja_p1_t2', isDone: false),
         ],
       ),
       PhaseModel(
-        title: 'Tăng cường sức bền (Tuần 5-8)',
+        title: 'plan_ja_p2',
         tasks: [
-          TaskModel(title: 'Nâng cự ly lên 10km', isDone: false),
-          TaskModel(title: 'Tập bài bổ trợ chân (Leg day)', isDone: false),
-        ],
-      ),
-      PhaseModel(
-        title: 'Bứt phá (Tuần 9-12)',
-        tasks: [
-          TaskModel(title: 'Chạy thử cự ly 15km', isDone: false),
-          TaskModel(title: 'Đăng ký giải chạy chính thức', isDone: false),
-        ],
-      ),
-    ],
-  ),
-
-  PlanModel(
-    title: 'Xây dựng Portfolio cá nhân',
-    category: sampleCategories.firstWhere((c) => c.id == 'work'),
-    startDate: DateTime.now().subtract(const Duration(days: 10)),
-    endDate: DateTime.now().add(const Duration(days: 45)),
-    phases: [
-      PhaseModel(
-        title: 'Chuẩn bị nội dung',
-        tasks: [
-          TaskModel(title: 'Tổng hợp 5 dự án tốt nhất', isDone: true),
-          TaskModel(title: 'Viết Case Study chi tiết', isDone: false),
-        ],
-      ),
-      PhaseModel(
-        title: 'Thiết kế & Code',
-        tasks: [
-          TaskModel(title: 'Thiết kế UI trên Figma', isDone: false),
-          TaskModel(title: 'Lập trình bằng Flutter Web', isDone: false),
-        ],
-      ),
-      PhaseModel(
-        title: 'Triển khai',
-        tasks: [
-          TaskModel(title: 'Mua tên miền cá nhân', isDone: false),
-          TaskModel(title: 'Đưa lên Github Pages', isDone: false),
+          TaskModel(title: 'plan_ja_p2_t1', isDone: false),
+          TaskModel(title: 'plan_ja_p2_t2', isDone: false),
         ],
       ),
     ],

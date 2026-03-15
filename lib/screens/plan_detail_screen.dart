@@ -26,7 +26,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController(text: widget.plan.title);
+    _titleController = TextEditingController(text: t(widget.plan.title));
   }
 
   @override
@@ -296,7 +296,6 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
     color: color,
     letterSpacing: 1.2,
   );
-
   Widget _buildPhaseDetail(PhaseModel phase) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -307,45 +306,33 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
         border: Border.all(color: Colors.grey[200]!),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
-            initialValue: phase.title,
+            initialValue: t(phase.title),
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             decoration: const InputDecoration(
               border: InputBorder.none,
               isDense: true,
             ),
-            onChanged: (val) => phase.title = val,
           ),
+
           const Divider(height: 20),
-          ...phase.tasks.map(
-            (task) => CheckboxListTile(
-              contentPadding: EdgeInsets.zero,
-              value: task.isDone,
-              controlAffinity: ListTileControlAffinity.leading,
-              title: TextFormField(
-                initialValue: task.title,
-                style: TextStyle(
-                  fontSize: 14,
-                  decoration: task.isDone ? TextDecoration.lineThrough : null,
-                  color: task.isDone ? Colors.grey : Colors.black,
-                ),
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  isDense: true,
-                ),
-                onChanged: (val) => task.title = val,
-              ),
-              onChanged: (val) {
-                setState(() => task.isDone = val!);
-                if (widget.plan.isDone)
-                  AlertUtils.show(
-                    context,
-                    "${t('detail_congrats')} '${widget.plan.title}'",
-                  );
-              },
-            ),
+
+          Column(
+            children: List.generate(phase.tasks.length, (index) {
+              final task = phase.tasks[index];
+
+              return CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                value: task.isDone,
+                controlAffinity: ListTileControlAffinity.leading,
+                title: Text(t(task.title)),
+                onChanged: (val) {
+                  setState(() => task.isDone = val!);
+                },
+              );
+            }),
           ),
         ],
       ),

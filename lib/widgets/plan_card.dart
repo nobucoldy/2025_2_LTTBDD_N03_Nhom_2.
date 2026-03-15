@@ -61,7 +61,7 @@ Widget planCard(PlanModel plan, String locale) {
                         ),
                       ),
                     Text(
-                      plan.title,
+                      t(plan.title),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
