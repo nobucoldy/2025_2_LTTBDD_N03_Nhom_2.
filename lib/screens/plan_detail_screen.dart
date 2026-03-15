@@ -143,7 +143,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                         FocusScope.of(context).unfocus();
                       },
                       decoration: InputDecoration(
-                        hintText: 'Thêm ghi chú ngắn về kế hoạch...',
+                        hintText: 'Thêm ghi chú...',
                         hintStyle: TextStyle(
                           color: Colors.grey[400],
                           fontSize: 13,
