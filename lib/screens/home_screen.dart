@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
               });
               AlertUtils.show(
                 context,
-                "Kế hoạch '${plan.title}' đã hoàn thành!",
+                "Chúc mừng! Bạn đã hoàn thành toàn bộ lộ trình '${plan.title}'",
               );
             },
             backgroundColor: Colors.transparent,

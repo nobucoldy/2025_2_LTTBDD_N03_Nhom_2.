@@ -327,6 +327,8 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
   }
 
   Widget _buildPhaseDetail(PhaseModel phase) {
+    final plan = widget.plan;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(16),
@@ -366,7 +368,18 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                 onChanged: (val) => task.title = val,
               ),
               controlAffinity: ListTileControlAffinity.leading,
-              onChanged: (val) => setState(() => task.isDone = val!),
+              onChanged: (val) {
+                setState(() {
+                  task.isDone = val!;
+                });
+
+                if (plan.isDone) {
+                  AlertUtils.show(
+                    context,
+                    "Chúc mừng! Bạn đã hoàn thành toàn bộ lộ trình '${plan.title}'",
+                  );
+                }
+              },
             ),
           ),
         ],

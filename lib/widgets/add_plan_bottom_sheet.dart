@@ -359,7 +359,6 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       endDate: finalEndDate,
       phases: List.from(_phases),
     );
-    AlertUtils.show(context, "Lưu kế hoạch thành công!");
     Navigator.pop(context, newPlan);
   }
 
