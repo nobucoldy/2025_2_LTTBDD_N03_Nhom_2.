@@ -43,6 +43,11 @@ class AppDrawer extends StatelessWidget {
             ),
             onTap: () => onNavigate('settings'),
           ),
+          ListTile(
+            leading: const Icon(Icons.language, size: 20),
+            title: const Text("Tiếng Việt / English"),
+            onTap: () => onNavigate('change_lang'),
+          ),
           if (isSettingsExpanded)
             Padding(
               padding: const EdgeInsets.only(left: 20),

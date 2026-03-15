@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
+import '../data/language_data.dart';
 
 class AboutScreen extends StatelessWidget {
-  const AboutScreen({super.key});
+  final String locale;
+
+  const AboutScreen({super.key, required this.locale});
+
+  String t(String key) {
+    return localizedText[locale]?[key] ?? key;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Giới thiệu'), centerTitle: true),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(t('about_title')),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        foregroundColor: Colors.black,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -21,20 +35,24 @@ class AboutScreen extends StatelessWidget {
                     color: Colors.purple,
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'APP QUẢN LÝ KẾ HOẠCH',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  Text(
+                    t('app_name'),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  const Text('Phiên bản 1.0.0'),
+                  Text('${t('version')} 1.0.0'),
                 ],
               ),
             ),
 
             const Divider(height: 40),
 
-            const Text(
-              'Thành viên nhóm 2:',
-              style: TextStyle(
+            Text(
+              t('team_members'),
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.purple,
@@ -47,19 +65,23 @@ class AboutScreen extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            const Text(
-              'Công nghệ sử dụng:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              t('tech_stack'),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const Card(
-              margin: EdgeInsets.only(top: 10),
+            Card(
+              elevation: 0,
+              color: Colors.grey[50],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: Colors.grey[200]!),
+              ),
+              margin: const EdgeInsets.only(top: 10),
               child: Padding(
-                padding: EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  '• Flutter Framework\n'
-                  '• Ngôn ngữ Dart\n'
-                  '• Giao diện Material 3',
-                  style: TextStyle(height: 1.5),
+                  t('tech_list'),
+                  style: const TextStyle(height: 1.5),
                 ),
               ),
             ),
@@ -71,6 +93,7 @@ class AboutScreen extends StatelessWidget {
 
   Widget _buildMemberTile(String name, String mssv, String role) {
     return ListTile(
+      contentPadding: EdgeInsets.zero,
       leading: const CircleAvatar(
         backgroundColor: Colors.purple,
         child: Icon(Icons.person, color: Colors.white),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import '../data/language_data.dart';
 import '../utils/alert.dart';
 import 'about_screen.dart';
 import '../widgets/plan_card.dart';
@@ -28,6 +29,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String _locale = 'vi';
+  String t(String key) {
+    return localizedText[_locale]?[key] ?? key;
+  }
+
   bool _isSettingsExpanded = false;
   int _selectedIndex = 0;
   late CategoryModel? _selectedCategory;
@@ -56,11 +62,11 @@ class _HomeScreenState extends State<HomeScreen> {
     }).toList();
 
     if (allFiltered.isEmpty) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.all(40),
         child: Center(
           child: Text(
-            'Không tìm thấy kế hoạch nào',
+            t('no_plan'),
             style: TextStyle(color: Colors.grey, fontSize: 15),
           ),
         ),
@@ -145,30 +151,22 @@ class _HomeScreenState extends State<HomeScreen> {
               showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  title: const Text("Xác nhận xóa"),
-                  content: Text(
-                    "Bạn có chắc chắn muốn xóa kế hoạch '${plan.title}' không?",
-                  ),
+                  title: Text(t('confirm_delete')),
+                  content: Text("${t('delete_msg')} '${plan.title}'?"),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(ctx),
-                      child: const Text("HỦY"),
+                      child: Text(t('btn_cancel')),
                     ),
                     TextButton(
                       onPressed: () {
                         setState(() => samplePlans.remove(plan));
                         Navigator.pop(ctx);
-                        AlertUtils.show(context, "Đã xóa kế hoạch thành công");
+                        AlertUtils.show(context, t('delete_success'));
                       },
-                      child: const Text(
-                        "XÓA",
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: Text(
+                        t('btn_delete'),
+                        style: const TextStyle(color: Colors.red),
                       ),
                     ),
                   ],
@@ -224,12 +222,16 @@ class _HomeScreenState extends State<HomeScreen> {
         onNavigate: (value) {
           if (value == 'settings') {
             setState(() => _isSettingsExpanded = !_isSettingsExpanded);
+          } else if (value == 'change_lang') {
+            setState(() {
+              _locale = (_locale == 'vi') ? 'en' : 'vi';
+            });
           } else {
             Navigator.pop(context);
             if (value == 'about') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const AboutScreen()),
+                MaterialPageRoute(builder: (_) => AboutScreen(locale: _locale)),
               );
             }
           }
@@ -268,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   controller: _searchController,
                   autofocus: true,
                   decoration: InputDecoration(
-                    hintText: 'Tìm kế hoạch...',
+                    hintText: t('search_hint'),
                     border: InputBorder.none,
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.close),
@@ -301,7 +303,10 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           GestureDetector(
             onTap: () => setState(() => _selectedCategory = null),
-            child: filterChip('Tất cả', isSelected: _selectedCategory == null),
+            child: filterChip(
+              t('all_cat'),
+              isSelected: _selectedCategory == null,
+            ),
           ),
           const SizedBox(width: 8),
           ...sampleCategories.map((category) {
@@ -343,16 +348,19 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         setState(() => _selectedIndex = index);
       },
-      items: const [
+      items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.assessment),
-          label: 'Kế hoạch',
+          label: t('title'),
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.add_circle, size: 40, color: Colors.purple),
-          label: 'Thêm',
+          label: t('add'),
         ),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Của tôi'),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: t('dashboard'),
+        ),
       ],
     );
   }
