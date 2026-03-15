@@ -222,15 +222,16 @@ class _HomeScreenState extends State<HomeScreen> {
         onThemeChanged: widget.onThemeChanged,
         isSettingsExpanded: _isSettingsExpanded,
         onNavigate: (value) {
-          Navigator.pop(context);
-          if (value == 'about') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const AboutScreen()),
-            );
-          }
           if (value == 'settings') {
             setState(() => _isSettingsExpanded = !_isSettingsExpanded);
+          } else {
+            Navigator.pop(context);
+            if (value == 'about') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AboutScreen()),
+              );
+            }
           }
         },
       ),
