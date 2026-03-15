@@ -221,6 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
         isDarkMode: widget.isDarkMode,
         onThemeChanged: widget.onThemeChanged,
         isSettingsExpanded: _isSettingsExpanded,
+        locale: _locale,
         onNavigate: (value) {
           if (value == 'settings') {
             setState(() => _isSettingsExpanded = !_isSettingsExpanded);

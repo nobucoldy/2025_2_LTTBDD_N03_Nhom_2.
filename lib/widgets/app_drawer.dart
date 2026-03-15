@@ -5,6 +5,7 @@ class AppDrawer extends StatelessWidget {
   final Function(bool) onThemeChanged;
   final Function(String) onNavigate;
   final bool isSettingsExpanded;
+  final String locale;
 
   const AppDrawer({
     super.key,
@@ -12,6 +13,7 @@ class AppDrawer extends StatelessWidget {
     required this.onThemeChanged,
     required this.onNavigate,
     required this.isSettingsExpanded,
+    required this.locale,
   });
 
   @override
@@ -25,36 +27,56 @@ class AppDrawer extends StatelessWidget {
             decoration: const BoxDecoration(color: Colors.purple),
             alignment: Alignment.bottomLeft,
             padding: const EdgeInsets.only(left: 16, bottom: 16),
-            child: const Text(
-              'Menu',
-              style: TextStyle(color: Colors.white, fontSize: 20),
+            child: Text(
+              locale == 'vi' ? 'Menu' : 'Menu',
+              style: const TextStyle(color: Colors.white, fontSize: 20),
             ),
           ),
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('About'),
+            title: Text(locale == 'vi' ? 'Giới thiệu' : 'About'),
             onTap: () => onNavigate('about'),
           ),
           ListTile(
             leading: const Icon(Icons.settings),
-            title: const Text('Cài đặt'),
+            title: Text(locale == 'vi' ? 'Cài đặt' : 'Settings'),
             trailing: Icon(
               isSettingsExpanded ? Icons.expand_less : Icons.expand_more,
             ),
             onTap: () => onNavigate('settings'),
           ),
-          ListTile(
-            leading: const Icon(Icons.language, size: 20),
-            title: const Text("Tiếng Việt / English"),
-            onTap: () => onNavigate('change_lang'),
-          ),
+
           if (isSettingsExpanded)
             Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: SwitchListTile(
-                title: const Text('Chế độ tối', style: TextStyle(fontSize: 14)),
-                value: isDarkMode,
-                onChanged: onThemeChanged,
+              padding: const EdgeInsets.only(left: 10),
+              child: Column(
+                children: [
+                  SwitchListTile(
+                    secondary: const Icon(Icons.language, size: 20),
+                    title: Text(
+                      locale == 'vi' ? "Tiếng Việt" : "English",
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    value: locale == 'en',
+                    activeThumbColor: Colors.purple,
+                    onChanged: (bool value) {
+                      onNavigate('change_lang');
+                    },
+                  ),
+                  SwitchListTile(
+                    secondary: Icon(
+                      isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                      size: 20,
+                    ),
+                    title: Text(
+                      locale == 'vi' ? 'Chế độ tối' : 'Dark Mode',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    value: isDarkMode,
+                    activeThumbColor: Colors.purple,
+                    onChanged: onThemeChanged,
+                  ),
+                ],
               ),
             ),
         ],

@@ -92,7 +92,6 @@ class _PhaseItemState extends State<PhaseItem> {
             ],
           ),
           const Divider(height: 24),
-          // Danh sách nhiệm vụ hiện có
           ...widget.phase.tasks.map(
             (task) => Padding(
               padding: const EdgeInsets.only(bottom: 8, left: 4),
@@ -110,7 +109,6 @@ class _PhaseItemState extends State<PhaseItem> {
             ),
           ),
 
-          // Logic nhập trực tiếp (Inline Input)
           if (_isAddingTask)
             TextField(
               controller: _taskController,
