@@ -23,6 +23,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   DateTime? _endDate;
 
   final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   final List<PhaseModel> _phases = [
     PhaseModel(title: 'Giai đoạn 1', tasks: []),
   ];
@@ -57,6 +58,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   @override
   void dispose() {
     _titleController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -79,6 +81,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildTitleInput(),
+                  _buildDescriptionInput(),
                   const SizedBox(height: 15),
                   _buildTopActions(),
                   const SizedBox(height: 25),
@@ -125,6 +128,19 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       decoration: InputDecoration(
         hintText: 'Tên kế hoạch của bạn...',
         hintStyle: TextStyle(color: Colors.grey[400]),
+        border: InputBorder.none,
+      ),
+    );
+  }
+
+  Widget _buildDescriptionInput() {
+    return TextField(
+      controller: _descriptionController,
+      maxLines: null,
+      style: const TextStyle(fontSize: 15, color: Colors.black87),
+      decoration: InputDecoration(
+        hintText: 'Ghi chú... ',
+        hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15),
         border: InputBorder.none,
       ),
     );
@@ -314,6 +330,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     }
     final newPlan = PlanModel(
       title: _titleController.text.trim(),
+      description: _descriptionController.text.trim(),
       category: _category,
       startDate: _startDate ?? DateTime.now(),
       endDate: _endDate ?? DateTime.now(),

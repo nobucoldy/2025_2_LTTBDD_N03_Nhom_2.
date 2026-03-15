@@ -4,6 +4,7 @@ import 'phase_model.dart';
 class PlanModel {
   String title;
   CategoryModel? category;
+  String? description;
   DateTime? startDate;
   DateTime? endDate;
   List<PhaseModel> phases;
@@ -11,6 +12,7 @@ class PlanModel {
   PlanModel({
     required this.title,
     this.category,
+    this.description,
     this.startDate,
     this.endDate,
     required this.phases,

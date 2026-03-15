@@ -112,21 +112,32 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildSlidableItem(PlanModel plan) {
     return Slidable(
       key: ObjectKey(plan),
-
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
         extentRatio: 0.35,
         children: [
           CustomSlidableAction(
-            onPressed: (context) {},
+            onPressed: (context) {
+              setState(() {
+                for (var phase in plan.phases) {
+                  for (var task in phase.tasks) {
+                    task.isDone = true;
+                  }
+                }
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Đã hoàn thành: ${plan.title}')),
+              );
+            },
             backgroundColor: Colors.transparent,
             padding: EdgeInsets.zero,
             child: _buildActionButton(
-              icon: Icons.calendar_month_rounded,
-              color: Colors.orangeAccent,
+              icon: Icons.check_circle_outline_rounded,
+              color: Colors.green,
               label: '',
             ),
           ),
+
           CustomSlidableAction(
             onPressed: (context) {
               setState(() => samplePlans.remove(plan));
@@ -147,7 +158,6 @@ class _HomeScreenState extends State<HomeScreen> {
             context,
             MaterialPageRoute(builder: (_) => PlanDetailScreen(plan: plan)),
           );
-
           setState(() {});
         },
         child: planCard(plan),
