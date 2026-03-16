@@ -381,8 +381,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBottomNav() {
+    final theme = Theme.of(context);
+    final selectedColor = theme.colorScheme.primary;
+    final unselectedColor = theme.hintColor;
+
     return BottomNavigationBar(
       currentIndex: _selectedIndex,
+      selectedItemColor: selectedColor,
+      unselectedItemColor: unselectedColor,
+      showUnselectedLabels: true,
+      type: BottomNavigationBarType.fixed,
       onTap: (index) async {
         if (index == 1) {
           final newPlan = await showModalBottomSheet(
@@ -406,15 +414,21 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.assessment),
+          icon: Icon(
+            _selectedIndex == 0 ? Icons.assessment : Icons.assessment_outlined,
+          ),
           label: t('title'),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.add_circle, size: 40, color: Colors.purple),
+          icon: Icon(
+            Icons.add_circle,
+            size: _selectedIndex == 1 ? 46 : 40,
+            color: Colors.purple,
+          ),
           label: t('add'),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(_selectedIndex == 2 ? Icons.person : Icons.person_outline),
           label: t('dashboard'),
         ),
       ],
