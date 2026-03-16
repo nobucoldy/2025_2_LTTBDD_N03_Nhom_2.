@@ -112,6 +112,7 @@ const Map<String, Map<String, String>> localizedText = {
     'plan_ja_p2_t2': 'Luyện nghe hội thoại sơ cấp',
     'db_overall_progress': 'Tiến độ tổng thể',
     'db_encouragement': 'Bạn đang làm rất tốt, hãy tiếp tục duy trì nhé!',
+    'favorite_title': 'Yêu thích',
   },
   'en': {
     'title': 'Plans',
@@ -226,5 +227,6 @@ const Map<String, Map<String, String>> localizedText = {
     'plan_ja_p2_t2': 'Practice elementary conversation listening',
     'db_overall_progress': 'Overall Progress',
     'db_encouragement': 'You are doing great, keep it up!',
+    'favorite_title': 'Favorite',
   },
 };

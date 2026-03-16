@@ -44,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isSearching = false;
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
+  bool _showOnlyFavorites = false;
 
   @override
   void initState() {
@@ -53,24 +54,36 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMainContent() {
     final allFiltered = samplePlans.where((plan) {
-      final matchesCategory =
+      final String translatedTitle = t(plan.title).toLowerCase();
+      final bool matchesSearch =
+          _searchQuery.isEmpty || translatedTitle.contains(_searchQuery);
+
+      if (!matchesSearch) return false;
+
+      if (_showOnlyFavorites) {
+        return plan.isFavorite == true;
+      }
+
+      final bool matchesCategory =
           _selectedCategory == null ||
           plan.category?.id == _selectedCategory!.id;
 
-      final translatedTitle = t(plan.title).toLowerCase();
-      final matchesSearch =
-          _searchQuery.isEmpty || translatedTitle.contains(_searchQuery);
-
-      return matchesCategory && matchesSearch;
+      return matchesCategory;
     }).toList();
+
+    allFiltered.sort((a, b) {
+      if (a.isFavorite && !b.isFavorite) return -1;
+      if (!a.isFavorite && b.isFavorite) return 1;
+      return 0;
+    });
 
     if (allFiltered.isEmpty) {
       return Padding(
-        padding: EdgeInsets.all(40),
+        padding: const EdgeInsets.all(40),
         child: Center(
           child: Text(
             t('no_plan'),
-            style: TextStyle(color: Colors.grey, fontSize: 15),
+            style: const TextStyle(color: Colors.grey, fontSize: 15),
           ),
         ),
       );
@@ -320,20 +333,40 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => setState(() => _selectedCategory = null),
+            onTap: () => setState(() {
+              _selectedCategory = null;
+              _showOnlyFavorites = false;
+            }),
             child: filterChip(
               t('all_cat'),
               context,
-              isSelected: _selectedCategory == null,
+              isSelected: _selectedCategory == null && !_showOnlyFavorites,
             ),
           ),
           const SizedBox(width: 8),
+
+          GestureDetector(
+            onTap: () => setState(() {
+              _showOnlyFavorites = true;
+              _selectedCategory = null;
+            }),
+            child: filterChip(
+              t('favorite_title'),
+              context,
+              isSelected: _showOnlyFavorites,
+            ),
+          ),
+          const SizedBox(width: 8),
+
           ...sampleCategories.map((category) {
             final isSelected = _selectedCategory?.id == category.id;
             return Padding(
               padding: const EdgeInsets.only(right: 8),
               child: GestureDetector(
-                onTap: () => setState(() => _selectedCategory = category),
+                onTap: () => setState(() {
+                  _selectedCategory = category;
+                  _showOnlyFavorites = false;
+                }),
                 child: filterChip(
                   t(category.name),
                   context,
