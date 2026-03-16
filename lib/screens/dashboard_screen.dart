@@ -13,7 +13,6 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final int totalPlans = samplePlans.length;
     final int completedPlans = samplePlans.where((p) => p.isDone).length;
-    final int inProgressPlans = totalPlans - completedPlans;
 
     final double avgProgress = totalPlans > 0
         ? samplePlans.map((p) => p.progress).reduce((a, b) => a + b) /
@@ -39,10 +38,12 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 1. Tiến độ tổng thể (%)
             _buildOverallProgress(avgProgress),
 
             const SizedBox(height: 25),
 
+            // 2. Chỉ giữ lại 2 thẻ: Tổng số và Hoàn thành
             Row(
               children: [
                 Expanded(
@@ -65,18 +66,9 @@ class DashboardScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 35),
 
-            _buildStatCard(
-              t('detail_progress'),
-              "$inProgressPlans ${t('title').toLowerCase()}",
-              Icons.pending_actions,
-              Colors.orange,
-              isFullWidth: true,
-            ),
-
-            const SizedBox(height: 30),
-
+            // 3. Danh sách thể loại kèm tiến độ chi tiết
             Text(
               t('add_category'),
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -84,7 +76,7 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: 15),
             _buildCategoryList(),
 
-            const SizedBox(height: 100),
+            const SizedBox(height: 50),
           ],
         ),
       ),
@@ -132,7 +124,7 @@ class DashboardScreen extends StatelessWidget {
               children: [
                 Text(
                   t('db_overall_progress'),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -158,9 +150,8 @@ class DashboardScreen extends StatelessWidget {
     String title,
     String value,
     IconData icon,
-    Color color, {
-    bool isFullWidth = false,
-  }) {
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -207,40 +198,91 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryList() {
-    Map<String, int> catCounts = {};
+    Map<dynamic, List<double>> catStats = {};
+
     for (var plan in samplePlans) {
-      String catName = plan.category?.name ?? 'cat_none';
-      catCounts[catName] = (catCounts[catName] ?? 0) + 1;
+      var cat = plan.category;
+      if (!catStats.containsKey(cat)) {
+        catStats[cat] = [0.0, 0];
+      }
+      catStats[cat]![0] += plan.progress;
+      catStats[cat]![1] += 1;
     }
 
     return Column(
-      children: catCounts.entries
-          .map(
-            (e) => Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Row(
+      children: catStats.entries.map((e) {
+        final category = e.key;
+        final double totalProgress = e.value[0];
+        final int count = e.value[1].toInt();
+        final double avgCatProgress = count > 0 ? totalProgress / count : 0;
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              Row(
                 children: [
-                  const Icon(Icons.folder, size: 20, color: Colors.purple),
-                  const SizedBox(width: 15),
-                  Text(
-                    t(e.key),
-                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  Icon(
+                    category != null ? category.icon : Icons.folder_open,
+                    size: 22,
+                    color: Colors.purple[700],
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: Text(
+                      category != null ? t(category.name) : t('cat_none'),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
                   Text(
-                    "${e.value} ${t('title').toLowerCase()}",
-                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                    "$count ${t('title').toLowerCase()}",
+                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
                   ),
                 ],
               ),
-            ),
-          )
-          .toList(),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        value: avgCatProgress,
+                        minHeight: 6,
+                        backgroundColor: Colors.grey[100],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          avgCatProgress == 1.0
+                              ? Colors.green
+                              : Colors.purple[300]!,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    "${(avgCatProgress * 100).toInt()}%",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: avgCatProgress == 1.0
+                          ? Colors.green
+                          : Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }

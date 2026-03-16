@@ -39,7 +39,7 @@ Widget planCard(PlanModel plan, String locale) {
           Row(
             children: [
               Icon(
-                plan.category?.icon ?? Icons.assignment_outlined,
+                plan.category?.icon ?? Icons.folder_open,
                 color: contentColor,
               ),
               const SizedBox(width: 12),
