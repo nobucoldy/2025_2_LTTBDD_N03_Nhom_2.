@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/plan_model.dart';
 import '../models/phase_model.dart';
+import '../utils/add_category_dialog.dart';
 import '../utils/alert.dart';
 import '../utils/category_picker.dart';
 import '../widgets/info_chip.dart';
@@ -229,9 +230,27 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                 locale: widget.locale,
               );
               if (selected != null) {
-                setState(() {
-                  widget.plan.category = selected;
-                });
+                // Nếu ID là 'add_new_id' (đây là ID đặc biệt bạn đặt cho nút Add New)
+                if (selected.id == 'add_new_id') {
+                  // GỌI CỬA SỔ NHẬP TÊN (Dialog)
+                  final newCat = await showAddCategoryDialog(
+                    context,
+                    widget.locale,
+                    t, // Truyền hàm dịch ngôn ngữ vào
+                  );
+
+                  // Nếu người dùng nhập tên và nhấn OK
+                  if (newCat != null) {
+                    setState(() {
+                      widget.plan.category = newCat;
+                    });
+                  }
+                } else {
+                  // Nếu chọn một thể loại có sẵn bình thường
+                  setState(() {
+                    widget.plan.category = selected;
+                  });
+                }
               }
             },
           ),
