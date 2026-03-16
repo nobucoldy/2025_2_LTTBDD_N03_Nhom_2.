@@ -16,6 +16,7 @@ final List<PlanModel> samplePlans = [
     category: _getCat('finance'),
     startDate: DateTime(2026, 1, 1),
     endDate: DateTime(2027, 12, 31),
+    isFavorite: true,
     phases: [
       PhaseModel(
         title: 'plan_finance_p1',
@@ -48,6 +49,7 @@ final List<PlanModel> samplePlans = [
     category: _getCat('work'),
     startDate: DateTime(2026, 3, 1),
     endDate: DateTime(2027, 3, 1),
+    isFavorite: true,
     phases: [
       PhaseModel(
         title: 'plan_flutter_p1',
@@ -78,6 +80,7 @@ final List<PlanModel> samplePlans = [
     category: _getCat('life'),
     startDate: DateTime.now().subtract(const Duration(days: 5)),
     endDate: DateTime.now().add(const Duration(days: 60)),
+    isFavorite: false,
     phases: [
       PhaseModel(
         title: 'plan_life_p1',
@@ -101,6 +104,7 @@ final List<PlanModel> samplePlans = [
     category: _getCat('study'),
     startDate: DateTime.now(),
     endDate: DateTime.now().add(const Duration(days: 180)),
+    isFavorite: false,
     phases: [
       PhaseModel(
         title: 'plan_ja_p1',
