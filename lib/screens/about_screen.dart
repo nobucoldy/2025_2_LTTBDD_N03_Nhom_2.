@@ -12,14 +12,17 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(t('about_title')),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        foregroundColor: Colors.black,
+        foregroundColor: isDark ? Colors.white : Colors.black,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -29,21 +32,27 @@ class AboutScreen extends StatelessWidget {
             Center(
               child: Column(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.description_outlined,
                     size: 80,
-                    color: Colors.purple,
+                    color: isDark ? Colors.purple[300] : Colors.purple,
                   ),
                   const SizedBox(height: 10),
                   Text(
                     t('app_name'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  Text('${t('version')} 1.0.0'),
+                  Text(
+                    '${t('version')} 1.0.0',
+                    style: TextStyle(
+                      color: isDark ? Colors.white70 : Colors.black54,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -52,36 +61,50 @@ class AboutScreen extends StatelessWidget {
 
             Text(
               t('team_members'),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.purple,
+                color: isDark ? Colors.purple[200] : Colors.purple,
               ),
             ),
             const SizedBox(height: 10),
 
-            _buildMemberTile('Nguyễn Quế Bắc', '23010574', 'CNTT6-K17'),
-            _buildMemberTile('Hoàng Tuấn Kiệt', '23010517', 'CNTT6-K17'),
+            _buildMemberTile('Nguyễn Quế Bắc', '23010574', 'CNTT6-K17', isDark),
+            _buildMemberTile(
+              'Hoàng Tuấn Kiệt',
+              '23010517',
+              'CNTT6-K17',
+              isDark,
+            ),
 
             const SizedBox(height: 30),
 
             Text(
               t('tech_stack'),
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black,
+              ),
             ),
             Card(
               elevation: 0,
-              color: Colors.grey[50],
+              color: isDark ? theme.colorScheme.surface : Colors.grey[50],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
-                side: BorderSide(color: Colors.grey[200]!),
+                side: BorderSide(
+                  color: isDark ? Colors.white10 : Colors.grey[200]!,
+                ),
               ),
               margin: const EdgeInsets.only(top: 10),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
                   t('tech_list'),
-                  style: const TextStyle(height: 1.5),
+                  style: TextStyle(
+                    height: 1.5,
+                    color: isDark ? Colors.white70 : Colors.black87,
+                  ),
                 ),
               ),
             ),
@@ -91,15 +114,24 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMemberTile(String name, String mssv, String role) {
+  Widget _buildMemberTile(String name, String mssv, String role, bool isDark) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: const CircleAvatar(
-        backgroundColor: Colors.purple,
-        child: Icon(Icons.person, color: Colors.white),
+      leading: CircleAvatar(
+        backgroundColor: isDark ? Colors.purple[300] : Colors.purple,
+        child: const Icon(Icons.person, color: Colors.white),
       ),
-      title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text('MSSV: $mssv - $role'),
+      title: Text(
+        name,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: isDark ? Colors.white : Colors.black,
+        ),
+      ),
+      subtitle: Text(
+        'MSSV: $mssv - $role',
+        style: TextStyle(color: isDark ? Colors.white60 : Colors.black54),
+      ),
     );
   }
 }
