@@ -11,6 +11,9 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final int totalPlans = samplePlans.length;
     final int completedPlans = samplePlans.where((p) => p.isDone).length;
 
@@ -20,12 +23,12 @@ class DashboardScreen extends StatelessWidget {
         : 0;
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
           t('dashboard'),
-          style: const TextStyle(
-            color: Colors.black,
+          style: TextStyle(
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -38,12 +41,10 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Tiến độ tổng thể (%)
             _buildOverallProgress(avgProgress),
 
             const SizedBox(height: 25),
 
-            // 2. Chỉ giữ lại 2 thẻ: Tổng số và Hoàn thành
             Row(
               children: [
                 Expanded(
@@ -52,6 +53,7 @@ class DashboardScreen extends StatelessWidget {
                     totalPlans.toString(),
                     Icons.assignment,
                     Colors.blue,
+                    context,
                   ),
                 ),
                 const SizedBox(width: 15),
@@ -61,6 +63,7 @@ class DashboardScreen extends StatelessWidget {
                     completedPlans.toString(),
                     Icons.check_circle,
                     Colors.green,
+                    context,
                   ),
                 ),
               ],
@@ -68,13 +71,16 @@ class DashboardScreen extends StatelessWidget {
 
             const SizedBox(height: 35),
 
-            // 3. Danh sách thể loại kèm tiến độ chi tiết
             Text(
               t('add_category'),
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black,
+              ),
             ),
             const SizedBox(height: 15),
-            _buildCategoryList(),
+            _buildCategoryList(context),
 
             const SizedBox(height: 50),
           ],
@@ -151,18 +157,22 @@ class DashboardScreen extends StatelessWidget {
     String value,
     IconData icon,
     Color color,
+    BuildContext context,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
+          if (!isDark)
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
         ],
       ),
       child: Row(
@@ -181,9 +191,10 @@ class DashboardScreen extends StatelessWidget {
             children: [
               Text(
                 value,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
               Text(
@@ -197,7 +208,8 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryList() {
+  Widget _buildCategoryList(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     Map<dynamic, List<double>> catStats = {};
 
     for (var plan in samplePlans) {
@@ -220,7 +232,7 @@ class DashboardScreen extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -230,15 +242,16 @@ class DashboardScreen extends StatelessWidget {
                   Icon(
                     category != null ? category.icon : Icons.folder_open,
                     size: 22,
-                    color: Colors.purple[700],
+                    color: Colors.purple[300],
                   ),
                   const SizedBox(width: 15),
                   Expanded(
                     child: Text(
                       category != null ? t(category.name) : t('cat_none'),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
                   ),
@@ -257,7 +270,9 @@ class DashboardScreen extends StatelessWidget {
                       child: LinearProgressIndicator(
                         value: avgCatProgress,
                         minHeight: 6,
-                        backgroundColor: Colors.grey[100],
+                        backgroundColor: isDark
+                            ? Colors.white10
+                            : Colors.grey[100],
                         valueColor: AlwaysStoppedAnimation<Color>(
                           avgCatProgress == 1.0
                               ? Colors.green
@@ -274,7 +289,7 @@ class DashboardScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: avgCatProgress == 1.0
                           ? Colors.green
-                          : Colors.black87,
+                          : (isDark ? Colors.white70 : Colors.black87),
                     ),
                   ),
                 ],

@@ -18,30 +18,54 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           Container(
             height: 120,
-            decoration: const BoxDecoration(color: Colors.purple),
+            decoration: BoxDecoration(
+              color: isDark ? Colors.purple[900] : Colors.purple,
+            ),
             alignment: Alignment.bottomLeft,
             padding: const EdgeInsets.only(left: 16, bottom: 16),
             child: Text(
-              locale == 'vi' ? 'Menu' : 'Menu',
-              style: const TextStyle(color: Colors.white, fontSize: 20),
+              'Menu',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
+
           ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: Text(locale == 'vi' ? 'Giới thiệu' : 'About'),
+            leading: Icon(
+              Icons.info_outline,
+              color: isDark ? Colors.white70 : Colors.black87,
+            ),
+            title: Text(
+              locale == 'vi' ? 'Giới thiệu' : 'About',
+              style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+            ),
             onTap: () => onNavigate('about'),
           ),
+
           ListTile(
-            leading: const Icon(Icons.settings),
-            title: Text(locale == 'vi' ? 'Cài đặt' : 'Settings'),
+            leading: Icon(
+              Icons.settings,
+              color: isDark ? Colors.white70 : Colors.black87,
+            ),
+            title: Text(
+              locale == 'vi' ? 'Cài đặt' : 'Settings',
+              style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+            ),
             trailing: Icon(
               isSettingsExpanded ? Icons.expand_less : Icons.expand_more,
+              color: isDark ? Colors.white38 : Colors.grey,
             ),
             onTap: () => onNavigate('settings'),
           ),
@@ -52,13 +76,21 @@ class AppDrawer extends StatelessWidget {
               child: Column(
                 children: [
                   SwitchListTile(
-                    secondary: const Icon(Icons.language, size: 20),
+                    secondary: Icon(
+                      Icons.language,
+                      size: 20,
+                      color: isDark ? Colors.purple[200] : Colors.purple,
+                    ),
                     title: Text(
                       locale == 'vi' ? "Tiếng Việt" : "English",
-                      style: const TextStyle(fontSize: 14),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: isDark ? Colors.white70 : Colors.black87,
+                      ),
                     ),
                     value: locale == 'en',
-                    activeThumbColor: Colors.purple,
+                    activeThumbColor: Colors.purple[200],
+                    activeTrackColor: Colors.purple.withOpacity(0.5),
                     onChanged: (bool value) {
                       onNavigate('change_lang');
                     },
@@ -67,13 +99,17 @@ class AppDrawer extends StatelessWidget {
                     secondary: Icon(
                       isDarkMode ? Icons.dark_mode : Icons.light_mode,
                       size: 20,
+                      color: isDark ? Colors.purple[200] : Colors.purple,
                     ),
                     title: Text(
                       locale == 'vi' ? 'Chế độ tối' : 'Dark Mode',
-                      style: const TextStyle(fontSize: 14),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: isDark ? Colors.white70 : Colors.black87,
+                      ),
                     ),
                     value: isDarkMode,
-                    activeThumbColor: Colors.purple,
+                    activeThumbColor: Colors.purple[200],
                     onChanged: onThemeChanged,
                   ),
                 ],

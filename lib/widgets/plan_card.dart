@@ -2,14 +2,22 @@ import 'package:flutter/material.dart';
 import '../models/plan_model.dart';
 import '../data/language_data.dart';
 
-Widget planCard(PlanModel plan, String locale) {
+Widget planCard(PlanModel plan, String locale, BuildContext context) {
   final bool isDone = plan.isDone;
   final double progress = plan.progress;
 
+  final theme = Theme.of(context);
+  final isDark = theme.brightness == Brightness.dark;
+
   String t(String key) => localizedText[locale]?[key] ?? key;
 
-  final Color contentColor = isDone ? Colors.grey.shade400 : Colors.purple;
-  final Color titleColor = isDone ? Colors.grey.shade500 : Colors.black87;
+  final Color contentColor = isDone
+      ? (isDark ? Colors.white30 : Colors.grey.shade400)
+      : theme.colorScheme.primary;
+
+  final Color titleColor = isDone
+      ? (isDark ? Colors.white38 : Colors.grey.shade500)
+      : theme.colorScheme.onSurface;
 
   return AnimatedOpacity(
     duration: const Duration(milliseconds: 300),
@@ -19,13 +27,17 @@ Widget planCard(PlanModel plan, String locale) {
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDone ? Colors.grey.shade50 : Colors.white,
+        color: isDone
+            ? (isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade50)
+            : theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: isDone ? Colors.grey.shade200 : Colors.purple.withOpacity(0.1),
+          color: isDone
+              ? (isDark ? Colors.white10 : Colors.grey.shade200)
+              : theme.colorScheme.primary.withOpacity(0.1),
         ),
         boxShadow: [
-          if (!isDone)
+          if (!isDone && !isDark)
             BoxShadow(
               color: Colors.black.withOpacity(0.03),
               blurRadius: 10,
@@ -68,7 +80,9 @@ Widget planCard(PlanModel plan, String locale) {
                         decoration: isDone
                             ? TextDecoration.lineThrough
                             : TextDecoration.none,
-                        decorationColor: Colors.grey.shade400,
+                        decorationColor: isDark
+                            ? Colors.white24
+                            : Colors.grey.shade400,
                         decorationThickness: 2,
                       ),
                     ),
@@ -80,7 +94,9 @@ Widget planCard(PlanModel plan, String locale) {
                           plan.description!,
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.grey.shade500,
+                            color: isDark
+                                ? Colors.white38
+                                : Colors.grey.shade500,
                             fontStyle: FontStyle.italic,
                           ),
                           maxLines: 1,
@@ -93,7 +109,9 @@ Widget planCard(PlanModel plan, String locale) {
               Icon(
                 Icons.arrow_forward_ios,
                 size: 14,
-                color: isDone ? Colors.grey.shade300 : Colors.grey.shade400,
+                color: isDone
+                    ? (isDark ? Colors.white12 : Colors.grey.shade300)
+                    : Colors.grey.shade400,
               ),
             ],
           ),
@@ -108,9 +126,15 @@ Widget planCard(PlanModel plan, String locale) {
                   child: LinearProgressIndicator(
                     value: progress,
                     minHeight: 6,
-                    backgroundColor: Colors.grey.shade100,
+                    backgroundColor: isDark
+                        ? Colors.white10
+                        : Colors.grey.shade100,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      isDone ? Colors.green.shade300 : Colors.purple.shade300,
+                      isDone
+                          ? Colors.green.shade400
+                          : (isDark
+                                ? theme.colorScheme.primary
+                                : Colors.purple.shade300),
                     ),
                   ),
                 ),
@@ -123,7 +147,9 @@ Widget planCard(PlanModel plan, String locale) {
                   fontWeight: FontWeight.bold,
                   color: isDone
                       ? Colors.green.shade400
-                      : Colors.purple.shade400,
+                      : (isDark
+                            ? theme.colorScheme.primary
+                            : Colors.purple.shade400),
                 ),
               ),
             ],

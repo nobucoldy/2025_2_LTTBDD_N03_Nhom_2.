@@ -16,11 +16,20 @@ class CategoryBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     String t(String key) => localizedText[locale]?[key] ?? key;
 
-    final Color bgColor = Colors.purple.shade50;
-    final Color borderColor = Colors.purple.shade200;
-    final Color textColor = Colors.purple;
+    final Color bgColor = isDark
+        ? theme.colorScheme.primary.withOpacity(0.15)
+        : Colors.purple.shade50;
+
+    final Color borderColor = isDark
+        ? theme.colorScheme.primary.withOpacity(0.3)
+        : Colors.purple.shade200;
+
+    final Color textColor = isDark ? theme.colorScheme.primary : Colors.purple;
 
     return InkWell(
       onTap: onTap,
@@ -43,7 +52,7 @@ class CategoryBox extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.bold,
               color: textColor,
               fontSize: 11,
             ),

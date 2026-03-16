@@ -48,15 +48,18 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.75,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      decoration: BoxDecoration(
+        color: theme.scaffoldBackgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: Column(
         children: [
-          _buildHandleBar(),
+          _buildHandleBar(isDark),
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -64,78 +67,91 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildTitleInput(),
-                  _buildDescriptionInput(),
+                  _buildTitleInput(isDark),
+                  _buildDescriptionInput(isDark, theme),
                   const SizedBox(height: 15),
-                  _buildTopActions(),
+                  _buildTopActions(isDark),
                   const SizedBox(height: 25),
-                  Text(t('add_roadmap'), style: _sectionStyle()),
+                  Text(t('add_roadmap'), style: _sectionStyle(isDark)),
                   const SizedBox(height: 12),
                   _buildPhaseList(),
-                  _buildAddPhaseButton(),
+                  const SizedBox(height: 12),
+                  _buildAddPhaseButton(isDark),
                 ],
               ),
             ),
           ),
-          _buildSaveButton(),
+          _buildSaveButton(isDark, theme),
         ],
       ),
     );
   }
 
-  Widget _buildHandleBar() {
+  Widget _buildHandleBar(bool isDark) {
     return Center(
       child: Container(
         margin: const EdgeInsets.only(top: 12, bottom: 8),
         width: 40,
         height: 4,
         decoration: BoxDecoration(
-          color: Colors.grey[300],
+          color: isDark ? Colors.white24 : Colors.grey[300],
           borderRadius: BorderRadius.circular(10),
         ),
       ),
     );
   }
 
-  TextStyle _sectionStyle() => const TextStyle(
+  TextStyle _sectionStyle(bool isDark) => TextStyle(
     fontSize: 11,
     fontWeight: FontWeight.w800,
-    color: Colors.grey,
+    color: isDark ? Colors.white38 : Colors.grey,
     letterSpacing: 1.2,
   );
-  Widget _buildTitleInput() {
+
+  Widget _buildTitleInput(bool isDark) {
     return TextField(
       controller: _titleController,
-      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+      style: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: isDark ? Colors.white : Colors.black,
+      ),
       decoration: InputDecoration(
         hintText: t('add_title_hint'),
-        hintStyle: TextStyle(color: Colors.grey[400]),
+        hintStyle: TextStyle(color: isDark ? Colors.white24 : Colors.grey[400]),
         border: InputBorder.none,
       ),
     );
   }
 
-  Widget _buildDescriptionInput() {
+  Widget _buildDescriptionInput(bool isDark, ThemeData theme) {
     return Container(
       margin: const EdgeInsets.only(top: 4, bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: isDark ? theme.colorScheme.surface : Colors.grey[50],
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey[200]!),
+        border: Border.all(color: isDark ? Colors.white10 : Colors.grey[200]!),
       ),
       child: TextField(
         controller: _descriptionController,
+        style: TextStyle(
+          color: isDark ? Colors.white70 : Colors.black87,
+          fontSize: 14,
+        ),
         maxLength: 100,
         maxLines: 1,
         decoration: InputDecoration(
           hintText: t('add_note_hint'),
-          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
+          hintStyle: TextStyle(
+            color: isDark ? Colors.white24 : Colors.grey[400],
+            fontSize: 13,
+          ),
           border: InputBorder.none,
           counterText: "",
           icon: Icon(
             Icons.edit_note_rounded,
-            color: Colors.grey[400],
+            color: isDark ? Colors.white24 : Colors.grey[400],
             size: 20,
           ),
           isDense: true,
@@ -144,7 +160,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     );
   }
 
-  Widget _buildTopActions() {
+  Widget _buildTopActions(bool isDark) {
     return Row(
       children: [
         Expanded(
@@ -152,8 +168,10 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
             key: _categoryKey,
             icon: _category?.icon ?? Icons.folder_open,
             label: _category != null ? t(_category!.name) : t('add_category'),
-            color: Colors.purple[50]!,
-            iconColor: Colors.purple,
+            color: isDark
+                ? Colors.purple.withOpacity(0.15)
+                : Colors.purple[50]!,
+            iconColor: isDark ? Colors.purple[200]! : Colors.purple,
             locale: widget.locale,
             onTap: () async {
               final selected = await CategoryPickerService.show(
@@ -168,36 +186,31 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                   widget.locale,
                   t,
                 );
-
-                if (newCat != null) {
-                  setState(() => _category = newCat);
-                }
-              } else {
+                if (newCat != null) setState(() => _category = newCat);
+              } else if (selected != null) {
                 setState(() => _category = selected);
               }
             },
           ),
         ),
-
         const SizedBox(width: 8),
-
         Expanded(
           child: _dateChip(
             _startDate,
             t('add_start'),
             Colors.orange,
             () => _pickDate(true),
+            isDark,
           ),
         ),
-
         const SizedBox(width: 8),
-
         Expanded(
           child: _dateChip(
             _endDate,
             t('add_end'),
             Colors.blue,
             () => _pickDate(false),
+            isDark,
           ),
         ),
       ],
@@ -209,6 +222,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     String label,
     MaterialColor color,
     VoidCallback onTap,
+    bool isDark,
   ) {
     return SizedBox(
       height: 40,
@@ -217,8 +231,8 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
             ? Icons.calendar_today_rounded
             : Icons.arrow_forward_rounded,
         label: date == null ? label : "${date.day}/${date.month}",
-        color: color[50]!,
-        iconColor: color[700]!,
+        color: isDark ? color.withOpacity(0.15) : color[50]!,
+        iconColor: isDark ? color[200]! : color[700]!,
         locale: widget.locale,
         onTap: onTap,
       ),
@@ -233,25 +247,19 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
           index: entry.key,
           phase: entry.value,
           locale: widget.locale,
-          onTitleChanged: (newTitle) {
-            entry.value.title = newTitle;
-          },
-          onAddTask: (taskTitle) {
-            setState(() {
-              entry.value.tasks.add(TaskModel(title: taskTitle));
-            });
-          },
+          onTitleChanged: (newTitle) => entry.value.title = newTitle,
+          onAddTask: (taskTitle) => setState(
+            () => entry.value.tasks.add(TaskModel(title: taskTitle)),
+          ),
           onDeletePhase: () {
-            if (_phases.length > 1) {
-              setState(() => _phases.removeAt(entry.key));
-            }
+            if (_phases.length > 1) setState(() => _phases.removeAt(entry.key));
           },
         );
       }).toList(),
     );
   }
 
-  Widget _buildAddPhaseButton() {
+  Widget _buildAddPhaseButton(bool isDark) {
     return OutlinedButton.icon(
       onPressed: () {
         setState(() {
@@ -268,20 +276,22 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(double.infinity, 48),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        side: BorderSide(color: Colors.purple[100]!),
-        foregroundColor: Colors.purple,
+        side: BorderSide(
+          color: isDark ? Colors.purple.withOpacity(0.3) : Colors.purple[100]!,
+        ),
+        foregroundColor: isDark ? Colors.purple[200] : Colors.purple,
       ),
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget _buildSaveButton(bool isDark, ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
       child: ElevatedButton(
         onPressed: _savePlan,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.white,
+          backgroundColor: isDark ? theme.colorScheme.primary : Colors.black,
+          foregroundColor: isDark ? Colors.black : Colors.white,
           minimumSize: const Size(double.infinity, 54),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
@@ -289,7 +299,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
         ),
         child: Text(
           t('add_btn_create'),
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -302,11 +312,10 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       referenceDate: _startDate,
       onDateSelected: (date) {
         setState(() {
-          if (isStart) {
+          if (isStart)
             _startDate = date;
-          } else {
+          else
             _endDate = date;
-          }
         });
       },
       locale: widget.locale,
@@ -320,19 +329,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     }
 
     final DateTime finalEndDate = _endDate ?? (_startDate ?? DateTime.now());
-
-    final DateTime start = DateTime(
-      _startDate!.year,
-      _startDate!.month,
-      _startDate!.day,
-    );
-    final DateTime end = DateTime(
-      finalEndDate.year,
-      finalEndDate.month,
-      finalEndDate.day,
-    );
-
-    if (start.isAfter(end)) {
+    if (_startDate!.isAfter(finalEndDate)) {
       Fluttertoast.showToast(
         msg: t('add_msg_date_error'),
         gravity: ToastGravity.TOP,

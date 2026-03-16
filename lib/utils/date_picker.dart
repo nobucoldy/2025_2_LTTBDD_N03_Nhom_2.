@@ -9,10 +9,13 @@ class DatePickerService {
     required Function(DateTime) onDateSelected,
     required String locale,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
@@ -28,7 +31,7 @@ class DatePickerService {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: isDark ? Colors.white24 : Colors.grey[300],
                 borderRadius: BorderRadius.circular(10),
               ),
             ),

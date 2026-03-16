@@ -35,7 +35,14 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.purple,
           brightness: Brightness.dark,
-          primary: Colors.purple,
+          surface: const Color(0xFF1E1E1E),
+        ),
+        scaffoldBackgroundColor: const Color(0xFF121212),
+
+        cardTheme: const CardThemeData(
+          color: Color(0xFF1E1E1E),
+          elevation: 0,
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         ),
       ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,

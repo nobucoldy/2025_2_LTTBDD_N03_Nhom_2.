@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/plan_model.dart';
 import '../models/phase_model.dart';
-import '../utils/add_category_dialog.dart';
 import '../utils/alert.dart';
+import '../utils/category_picker.dart';
 import '../widgets/info_chip.dart';
 import '../widgets/custom_date_picker.dart';
-import '../utils/category_picker.dart';
 import '../data/language_data.dart';
 
 class PlanDetailScreen extends StatefulWidget {
@@ -37,10 +36,13 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
   }
 
   void _pickDate(bool isStart) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
@@ -51,7 +53,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildHandleBar(),
+            _buildHandleBar(isDark),
             CustomDatePicker(
               initialDate:
                   (isStart ? widget.plan.startDate : widget.plan.endDate) ??
@@ -90,13 +92,13 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
     );
   }
 
-  Widget _buildHandleBar() {
+  Widget _buildHandleBar(bool isDark) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12),
       width: 40,
       height: 4,
       decoration: BoxDecoration(
-        color: Colors.grey[300],
+        color: isDark ? Colors.white24 : Colors.grey[300],
         borderRadius: BorderRadius.circular(10),
       ),
     );
@@ -104,21 +106,31 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final plan = widget.plan;
     final progress = plan.progress;
     final isDone = plan.isDone;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        foregroundColor: Colors.black,
+        foregroundColor: isDark ? Colors.white : Colors.black,
         title: TextField(
           controller: _titleController,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : Colors.black,
+          ),
           decoration: InputDecoration(
             hintText: t('detail_hint_title'),
+            hintStyle: TextStyle(
+              color: isDark ? Colors.white38 : Colors.grey[400],
+            ),
             border: InputBorder.none,
           ),
           onChanged: (val) => plan.title = val,
@@ -134,15 +146,20 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  _buildDescriptionField(plan),
+                  _buildDescriptionField(plan, theme),
                   const SizedBox(height: 16),
-                  _buildInfoChips(plan),
+                  _buildInfoChips(plan, isDark),
                   const Divider(height: 40),
-                  _buildProgressSection(isDone, progress),
+                  _buildProgressSection(isDone, progress, isDark),
                   const Divider(height: 40),
-                  Text(t('detail_roadmap'), style: _sectionStyle(Colors.grey)),
+                  Text(
+                    t('detail_roadmap'),
+                    style: _sectionStyle(isDark ? Colors.white54 : Colors.grey),
+                  ),
                   const SizedBox(height: 16),
-                  ...plan.phases.map((phase) => _buildPhaseDetail(phase)),
+                  ...plan.phases.map(
+                    (phase) => _buildPhaseDetail(phase, theme),
+                  ),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -153,32 +170,44 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
     );
   }
 
-  Widget _buildDescriptionField(PlanModel plan) {
+  Widget _buildDescriptionField(PlanModel plan, ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: isDark ? theme.colorScheme.surface : Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[100]!),
+        border: Border.all(color: isDark ? Colors.white10 : Colors.grey[100]!),
       ),
       child: TextFormField(
         initialValue: plan.description,
         maxLength: 150,
         maxLines: null,
-        style: TextStyle(fontSize: 14, color: Colors.grey[700], height: 1.4),
+        style: TextStyle(
+          fontSize: 14,
+          color: isDark ? Colors.white70 : Colors.grey[700],
+          height: 1.4,
+        ),
         decoration: InputDecoration(
           hintText: t('detail_hint_note'),
-          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
+          hintStyle: TextStyle(
+            color: isDark ? Colors.white24 : Colors.grey[400],
+            fontSize: 13,
+          ),
           border: InputBorder.none,
           counterText: "",
-          icon: Icon(Icons.notes_rounded, color: Colors.grey[400], size: 18),
+          icon: Icon(
+            Icons.notes_rounded,
+            color: isDark ? Colors.white24 : Colors.grey[400],
+            size: 18,
+          ),
         ),
         onChanged: (val) => plan.description = val,
       ),
     );
   }
 
-  Widget _buildInfoChips(PlanModel plan) {
+  Widget _buildInfoChips(PlanModel plan, bool isDark) {
     return Row(
       children: [
         Expanded(
@@ -188,8 +217,10 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
             label: plan.category != null
                 ? t(plan.category!.name)
                 : t('all_cat'),
-            color: Colors.purple[50]!,
-            iconColor: Colors.purple,
+            color: isDark
+                ? Colors.purple.withOpacity(0.15)
+                : Colors.purple[50]!,
+            iconColor: isDark ? Colors.purple[200]! : Colors.purple,
             locale: widget.locale,
             onTap: () async {
               final selected = await CategoryPickerService.show(
@@ -197,45 +228,33 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                 anchorKey: _categoryKey,
                 locale: widget.locale,
               );
-
-              if (selected?.id == 'add_new_id') {
-                final newCat = await showAddCategoryDialog(
-                  context,
-                  widget.locale,
-                  t,
-                );
-
-                if (newCat != null) {
-                  setState(() => plan.category = newCat);
-                }
-              } else if (selected != null) {
-                setState(() => plan.category = selected);
-              } else {
-                setState(() => plan.category = null);
+              if (selected != null) {
+                setState(() {
+                  widget.plan.category = selected;
+                });
               }
             },
           ),
         ),
 
         const SizedBox(width: 8),
-
         Expanded(
           child: _dateChip(
             plan.startDate,
             t('detail_start'),
             Colors.orange,
             () => _pickDate(true),
+            isDark,
           ),
         ),
-
         const SizedBox(width: 8),
-
         Expanded(
           child: _dateChip(
             plan.endDate,
             t('detail_end'),
             Colors.blue,
             () => _pickDate(false),
+            isDark,
           ),
         ),
       ],
@@ -247,27 +266,30 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
     String placeholder,
     MaterialColor color,
     VoidCallback onTap,
+    bool isDark,
   ) {
     return InfoChip(
       icon: placeholder == t('detail_start')
           ? Icons.calendar_today_rounded
           : Icons.arrow_forward_rounded,
       label: date == null ? placeholder : '${date.day}/${date.month}',
-      color: color[50]!,
-      iconColor: color[700]!,
+      color: isDark ? color.withOpacity(0.15) : color[50]!,
+      iconColor: isDark ? color[200]! : color[700]!,
       locale: widget.locale,
       onTap: onTap,
     );
   }
 
-  Widget _buildProgressSection(bool isDone, double progress) {
+  Widget _buildProgressSection(bool isDone, double progress, bool isDark) {
     return Column(
       children: [
         Row(
           children: [
             Text(
               isDone ? t('detail_completed_title') : t('detail_progress'),
-              style: _sectionStyle(isDone ? Colors.green : Colors.grey),
+              style: _sectionStyle(
+                isDone ? Colors.green : (isDark ? Colors.white54 : Colors.grey),
+              ),
             ),
             const Spacer(),
             Text(
@@ -275,7 +297,9 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: isDone ? Colors.green : Colors.black,
+                color: isDone
+                    ? Colors.green
+                    : (isDark ? Colors.white70 : Colors.black),
               ),
             ),
           ],
@@ -286,7 +310,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
           child: LinearProgressIndicator(
             value: progress,
             minHeight: 8,
-            backgroundColor: Colors.grey[200],
+            backgroundColor: isDark ? Colors.white10 : Colors.grey[200],
             valueColor: AlwaysStoppedAnimation<Color>(
               isDone ? Colors.green : Colors.purple,
             ),
@@ -319,54 +343,56 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
     color: color,
     letterSpacing: 1.2,
   );
-  Widget _buildPhaseDetail(PhaseModel phase) {
+  Widget _buildPhaseDetail(PhaseModel phase, ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: isDark ? theme.colorScheme.surface : Colors.grey[50],
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey[200]!),
+        border: Border.all(color: isDark ? Colors.white10 : Colors.grey[200]!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
             initialValue: t(phase.title),
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: isDark ? Colors.white : Colors.black,
+            ),
             decoration: const InputDecoration(
               border: InputBorder.none,
               isDense: true,
             ),
             onChanged: (val) => phase.title = val,
           ),
-          const Divider(height: 20),
+          Divider(
+            height: 20,
+            color: isDark ? Colors.white10 : Colors.grey[300],
+          ),
           Column(
             children: List.generate(phase.tasks.length, (index) {
               final task = phase.tasks[index];
-
               return CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
                 value: task.isDone,
+                activeColor: Colors.purple,
+                checkColor: Colors.white,
                 controlAffinity: ListTileControlAffinity.leading,
                 title: Text(
                   t(task.title),
                   style: TextStyle(
                     decoration: task.isDone ? TextDecoration.lineThrough : null,
-                    color: task.isDone ? Colors.grey : Colors.black,
+                    color: task.isDone
+                        ? (isDark ? Colors.white30 : Colors.grey)
+                        : (isDark ? Colors.white70 : Colors.black),
                   ),
                 ),
                 onChanged: (val) {
-                  setState(() {
-                    task.isDone = val!;
-                  });
-
-                  if (widget.plan.isDone) {
-                    AlertUtils.show(
-                      context,
-                      "${t('detail_congrats')} '${t(widget.plan.title)}'",
-                    );
-                  }
+                  setState(() => task.isDone = val!);
                 },
               );
             }),

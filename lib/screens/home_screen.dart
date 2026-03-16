@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
           setState(() {});
         },
-        child: planCard(plan, _locale),
+        child: planCard(plan, _locale, context),
       ),
     );
   }
@@ -319,6 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => setState(() => _selectedCategory = null),
             child: filterChip(
               t('all_cat'),
+              context,
               isSelected: _selectedCategory == null,
             ),
           ),
@@ -329,7 +330,11 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(right: 8),
               child: GestureDetector(
                 onTap: () => setState(() => _selectedCategory = category),
-                child: filterChip(t(category.name), isSelected: isSelected),
+                child: filterChip(
+                  t(category.name),
+                  context,
+                  isSelected: isSelected,
+                ),
               ),
             );
           }),

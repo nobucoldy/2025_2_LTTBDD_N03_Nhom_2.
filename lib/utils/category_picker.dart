@@ -9,11 +9,12 @@ class CategoryPickerService {
     required GlobalKey anchorKey,
     required String locale,
   }) async {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     String t(String key) => localizedText[locale]?[key] ?? key;
 
     final RenderBox button =
         anchorKey.currentContext!.findRenderObject() as RenderBox;
-
     final RenderBox overlay =
         Navigator.of(context).overlay!.context.findRenderObject() as RenderBox;
 
@@ -32,19 +33,28 @@ class CategoryPickerService {
       context: context,
       position: position,
       constraints: const BoxConstraints(maxWidth: 220, maxHeight: 400),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: isDark ? BorderSide(color: Colors.white10) : BorderSide.none,
+      ),
       items: [
         PopupMenuItem<CategoryModel?>(
           value: null,
           child: Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.folder_off_rounded,
                 size: 18,
-                color: Colors.grey,
+                color: isDark ? Colors.white38 : Colors.grey,
               ),
               const SizedBox(width: 12),
-              Text(t('cat_none'), style: const TextStyle(fontSize: 14)),
+              Text(
+                t('cat_none'),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: isDark ? Colors.white70 : Colors.black87,
+                ),
+              ),
             ],
           ),
         ),
@@ -52,7 +62,13 @@ class CategoryPickerService {
         const PopupMenuDivider(),
 
         ...sampleCategories.map(
-          (cat) => _buildPopupItem(cat, t(cat.name), cat.icon, Colors.purple),
+          (cat) => _buildPopupItem(
+            cat,
+            t(cat.name),
+            cat.icon,
+            isDark ? Colors.purple[200]! : Colors.purple,
+            isDark,
+          ),
         ),
 
         const PopupMenuDivider(),
@@ -65,17 +81,18 @@ class CategoryPickerService {
           ),
           child: Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.add_circle_outline,
                 size: 18,
-                color: Colors.blue,
+                color: isDark ? Colors.blue[300] : Colors.blue,
               ),
               const SizedBox(width: 12),
               Text(
                 t('cat_add_new'),
-                style: const TextStyle(
-                  color: Colors.blue,
+                style: TextStyle(
+                  color: isDark ? Colors.blue[300] : Colors.blue,
                   fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
               ),
             ],
@@ -92,6 +109,7 @@ class CategoryPickerService {
     String text,
     IconData icon,
     Color color,
+    bool isDark,
   ) {
     return PopupMenuItem<CategoryModel?>(
       value: value,
@@ -102,7 +120,10 @@ class CategoryPickerService {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(fontSize: 14),
+              style: TextStyle(
+                fontSize: 14,
+                color: isDark ? Colors.white70 : Colors.black87,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           ),

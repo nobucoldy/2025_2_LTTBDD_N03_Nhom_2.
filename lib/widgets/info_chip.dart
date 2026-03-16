@@ -20,24 +20,33 @@ class InfoChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        decoration: BoxDecoration(
+          color: isDark ? iconColor.withOpacity(0.15) : color,
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 16, color: iconColor),
+            Icon(
+              icon,
+              size: 16,
+              color: isDark ? _lighten(iconColor, 0.1) : iconColor,
+            ),
             const SizedBox(width: 6),
-
             Flexible(
               child: Text(
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: iconColor,
+                  color: isDark ? _lighten(iconColor, 0.1) : iconColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
@@ -47,5 +56,14 @@ class InfoChip extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color _lighten(Color color, [double amount = .1]) {
+    assert(amount >= 0 && amount <= 1);
+    final hsl = HSLColor.fromColor(color);
+    final hslLight = hsl.withLightness(
+      (hsl.lightness + amount).clamp(0.0, 1.0),
+    );
+    return hslLight.toColor();
   }
 }

@@ -46,13 +46,16 @@ class _PhaseItemState extends State<PhaseItem> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: isDark ? theme.colorScheme.surface : Colors.grey[50],
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey[200]!),
+        border: Border.all(color: isDark ? Colors.white10 : Colors.grey[200]!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,12 +64,14 @@ class _PhaseItemState extends State<PhaseItem> {
             children: [
               CircleAvatar(
                 radius: 12,
-                backgroundColor: Colors.purple[100],
+                backgroundColor: isDark
+                    ? Colors.purple.withOpacity(0.2)
+                    : Colors.purple[100],
                 child: Text(
                   "${widget.index + 1}",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: Colors.purple,
+                    color: isDark ? Colors.purple[200] : Colors.purple,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -75,9 +80,10 @@ class _PhaseItemState extends State<PhaseItem> {
               Expanded(
                 child: TextFormField(
                   initialValue: widget.phase.title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
+                    color: isDark ? Colors.white : Colors.black,
                   ),
                   decoration: const InputDecoration(
                     border: InputBorder.none,
@@ -87,16 +93,19 @@ class _PhaseItemState extends State<PhaseItem> {
                 ),
               ),
               IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.delete_outline,
                   size: 20,
-                  color: Colors.grey,
+                  color: isDark ? Colors.white38 : Colors.grey,
                 ),
                 onPressed: widget.onDeletePhase,
               ),
             ],
           ),
-          const Divider(height: 24),
+          Divider(
+            height: 24,
+            color: isDark ? Colors.white10 : Colors.grey[300],
+          ),
           ...widget.phase.tasks.map(
             (task) => Padding(
               padding: const EdgeInsets.only(bottom: 8, left: 4),
@@ -105,13 +114,16 @@ class _PhaseItemState extends State<PhaseItem> {
                   Icon(
                     Icons.check_circle_outline,
                     size: 18,
-                    color: Colors.grey[400],
+                    color: isDark ? Colors.white24 : Colors.grey[400],
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       task.title,
-                      style: const TextStyle(fontSize: 14),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: isDark ? Colors.white70 : Colors.black87,
+                      ),
                     ),
                   ),
                 ],
@@ -123,8 +135,12 @@ class _PhaseItemState extends State<PhaseItem> {
             TextField(
               controller: _taskController,
               autofocus: true,
+              style: TextStyle(color: isDark ? Colors.white : Colors.black),
               decoration: InputDecoration(
                 hintText: t('add_task_hint'),
+                hintStyle: TextStyle(
+                  color: isDark ? Colors.white24 : Colors.grey[400],
+                ),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.only(left: 28),
               ),
@@ -136,7 +152,9 @@ class _PhaseItemState extends State<PhaseItem> {
               onPressed: () => setState(() => _isAddingTask = true),
               icon: const Icon(Icons.add_rounded, size: 18),
               label: Text(t('add_task')),
-              style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
+              style: TextButton.styleFrom(
+                foregroundColor: isDark ? Colors.white54 : Colors.grey[600],
+              ),
             ),
         ],
       ),
