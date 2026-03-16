@@ -130,8 +130,8 @@ class DashboardScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Tiến độ tổng thể",
+                Text(
+                  t('db_overall_progress'),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -140,7 +140,7 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  "Bạn đang làm rất tốt, hãy tiếp tục duy trì nhé!",
+                  t('db_encouragement'),
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.8),
                     fontSize: 12,
