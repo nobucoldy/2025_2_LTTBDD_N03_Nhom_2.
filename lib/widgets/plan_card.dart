@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import '../models/plan_model.dart';
 import '../data/language_data.dart';
 
-Widget planCard(PlanModel plan, String locale, BuildContext context) {
+Widget planCard(
+  PlanModel plan,
+  String locale,
+  BuildContext context,
+  VoidCallback onToggleFavorite,
+) {
   final bool isDone = plan.isDone;
   final double progress = plan.progress;
+  final bool isFavorite = plan.isFavorite;
 
   final theme = Theme.of(context);
   final isDark = theme.brightness == Brightness.dark;
@@ -106,18 +112,32 @@ Widget planCard(PlanModel plan, String locale, BuildContext context) {
                   ],
                 ),
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 14,
-                color: isDone
-                    ? (isDark ? Colors.white12 : Colors.grey.shade300)
-                    : Colors.grey.shade400,
+
+              GestureDetector(
+                onTap: onToggleFavorite,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.all(4),
+                  child: Icon(
+                    isFavorite
+                        ? Icons.star_rounded
+                        : Icons.star_outline_rounded,
+                    size: 26,
+                    color: isDone
+                        ? (isDark ? Colors.white12 : Colors.grey.shade300)
+                        : (isFavorite
+                              ? (isDark
+                                    ? Colors.amber.shade300
+                                    : Colors.amber.shade400)
+                              : (isDark
+                                    ? Colors.white24
+                                    : Colors.grey.shade400)),
+                  ),
+                ),
               ),
             ],
           ),
-
           const SizedBox(height: 16),
-
           Row(
             children: [
               Expanded(

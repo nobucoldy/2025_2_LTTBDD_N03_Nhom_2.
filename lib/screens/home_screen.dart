@@ -202,7 +202,11 @@ class _HomeScreenState extends State<HomeScreen> {
           );
           setState(() {});
         },
-        child: planCard(plan, _locale, context),
+        child: planCard(plan, _locale, context, () {
+          setState(() {
+            plan.isFavorite = !plan.isFavorite;
+          });
+        }),
       ),
     );
   }

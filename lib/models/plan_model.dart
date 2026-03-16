@@ -8,6 +8,7 @@ class PlanModel {
   DateTime? startDate;
   DateTime? endDate;
   List<PhaseModel> phases;
+  bool isFavorite;
 
   PlanModel({
     required this.title,
@@ -16,6 +17,7 @@ class PlanModel {
     this.startDate,
     this.endDate,
     required this.phases,
+    this.isFavorite = false,
   });
 
   double get progress {
