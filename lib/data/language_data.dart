@@ -17,6 +17,7 @@ const Map<String, Map<String, String>> localizedText = {
     'btn_close': 'ĐÓNG',
     'btn_cancel': 'HỦY',
     'btn_delete': 'XÓA',
+    'btn_confirm': 'Xác nhận',
     'about_title': 'Giới thiệu',
     'app_name': 'APP QUẢN LÝ KẾ HOẠCH',
     'version': 'Phiên bản',
@@ -113,6 +114,9 @@ const Map<String, Map<String, String>> localizedText = {
     'db_overall_progress': 'Tiến độ tổng thể',
     'db_encouragement': 'Bạn đang làm rất tốt, hãy tiếp tục duy trì nhé!',
     'favorite_title': 'Yêu thích',
+    'confirm_complete_title': 'Xác nhận hoàn thành',
+    'confirm_complete_msg':
+        'Bạn có chắc chắn muốn đánh dấu hoàn thành toàn bộ kế hoạch',
   },
   'en': {
     'title': 'Plans',
@@ -132,6 +136,7 @@ const Map<String, Map<String, String>> localizedText = {
     'btn_close': 'CLOSE',
     'btn_cancel': 'CANCEL',
     'btn_delete': 'DELETE',
+    'btn_confirm': 'Confirm',
     'about_title': 'About',
     'app_name': 'PLAN MANAGEMENT APP',
     'version': 'Version',
@@ -228,5 +233,8 @@ const Map<String, Map<String, String>> localizedText = {
     'db_overall_progress': 'Overall Progress',
     'db_encouragement': 'You are doing great, keep it up!',
     'favorite_title': 'Favorite',
+    'confirm_complete_title': 'Confirm Completion',
+    'confirm_complete_msg':
+        'Are you sure you want to mark the entire plan as completed',
   },
 };
