@@ -54,10 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMainContent() {
     final allFiltered = samplePlans.where((plan) {
-      final String translatedTitle = t(plan.title).toLowerCase();
+      final String currentTitle = plan.title.toLowerCase();
       final bool matchesSearch =
-          _searchQuery.isEmpty || translatedTitle.contains(_searchQuery);
-
+          _searchQuery.isEmpty || currentTitle.contains(_searchQuery);
       if (!matchesSearch) return false;
 
       if (_showOnlyFavorites) {
@@ -155,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
               });
               AlertUtils.show(
                 context,
-                "${t('msg_success_done')} '${t(plan.title)}'",
+                "${t('msg_success_done')} '${plan.title}'",
               );
             },
             backgroundColor: Colors.transparent,
@@ -181,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   title: Text(t('confirm_delete_content')),
                   content: Text(
-                    "${t('confirm_delete_title')} '${t(plan.title)}'?",
+                    "${t('confirm_delete_title')} '${plan.title}'?",
                   ),
                   actions: [
                     TextButton(

@@ -388,27 +388,62 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
             height: 20,
             color: isDark ? Colors.white10 : Colors.grey[300],
           ),
+          // Cập nhật danh sách nhiệm vụ (Tasks)
           Column(
             children: List.generate(phase.tasks.length, (index) {
               final task = phase.tasks[index];
-              return CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                value: task.isDone,
-                activeColor: Colors.purple,
-                checkColor: Colors.white,
-                controlAffinity: ListTileControlAffinity.leading,
-                title: Text(
-                  t(task.title),
-                  style: TextStyle(
-                    decoration: task.isDone ? TextDecoration.lineThrough : null,
-                    color: task.isDone
-                        ? (isDark ? Colors.white30 : Colors.grey)
-                        : (isDark ? Colors.white70 : Colors.black),
-                  ),
+              return Padding(
+                // SỬA TẠI ĐÂY: Thêm Key để Flutter không bị nhầm lẫn dữ liệu
+                key: ObjectKey(task),
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: Checkbox(
+                        value: task.isDone,
+                        activeColor: Colors.purple,
+                        onChanged: (val) {
+                          setState(() => task.isDone = val!);
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextFormField(
+                        // SỬA TẠI ĐÂY: Dùng controller hoặc đảm bảo dữ liệu đồng bộ
+                        initialValue: task.title,
+                        style: TextStyle(
+                          fontSize: 14,
+                          decoration: task.isDone
+                              ? TextDecoration.lineThrough
+                              : null,
+                          color: task.isDone
+                              ? (isDark ? Colors.white30 : Colors.grey)
+                              : (isDark ? Colors.white70 : Colors.black),
+                        ),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          isDense: true,
+                        ),
+                        // Cập nhật dữ liệu ngay lập tức vào Model
+                        onChanged: (val) => task.title = val,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.remove_circle_outline, size: 18),
+                      color: isDark ? Colors.white24 : Colors.grey[400],
+                      onPressed: () {
+                        setState(() {
+                          phase.tasks.removeAt(index);
+                        });
+                      },
+                      constraints: const BoxConstraints(),
+                      padding: EdgeInsets.zero,
+                    ),
+                  ],
                 ),
-                onChanged: (val) {
-                  setState(() => task.isDone = val!);
-                },
               );
             }),
           ),
