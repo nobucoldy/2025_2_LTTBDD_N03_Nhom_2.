@@ -242,56 +242,65 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   Widget _buildPhaseList() {
     return Column(
       children: _phases.asMap().entries.map<Widget>((entry) {
+        int index = entry.key;
+        PhaseModel phase = entry.value;
+
         return PhaseItem(
-          key: ValueKey(entry.value),
-          index: entry.key,
-          phase: entry.value,
+          key: ValueKey(phase),
+          index: index,
+          phase: phase,
           locale: widget.locale,
-          onTitleChanged: (newTitle) => entry.value.title = newTitle,
-          onAddTask: (taskTitle) => setState(
-            () => entry.value.tasks.add(TaskModel(title: taskTitle)),
-          ),
+          onTitleChanged: (newTitle) => phase.title = newTitle,
+          onAddTask: (taskTitle) =>
+              setState(() => phase.tasks.add(TaskModel(title: taskTitle))),
           onDeletePhase: () {
             if (_phases.length > 1) {
-              showDialog(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  title: Text(t('confirm_delete_content')),
-                  content: Text(
-                    "${t('confirm_delete_title')} '${entry.value.title}'?",
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(ctx),
-                      child: Text(t('btn_cancel')),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() => _phases.removeAt(entry.key));
-                        Navigator.pop(ctx);
-                        AlertUtils.show(context, t('msg_success_delete'));
-                      },
-                      child: Text(
-                        t('btn_delete'),
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ),
-                  ],
-                ),
-              );
+              _confirmDeletePhase(context, phase, index);
             } else {
-              AlertUtils.show(
-                context,
-                "Phải có ít nhất một giai đoạn",
-                isError: true,
-              );
+              AlertUtils.show(context, t('msg_min_phase_error'), isError: true);
             }
           },
         );
       }).toList(),
+    );
+  }
+
+  void _confirmDeletePhase(BuildContext context, PhaseModel phase, int index) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Text(t('confirm_delete_content')),
+          content: Text("${t('confirm_delete_title')} '${phase.title}'?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text(t('btn_cancel')),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _phases.removeAt(index);
+                });
+                Navigator.of(ctx).pop();
+
+                AlertUtils.show(context, t('msg_success_delete'));
+              },
+              child: Text(
+                t('btn_delete'),
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
